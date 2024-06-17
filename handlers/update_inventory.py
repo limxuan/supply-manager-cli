@@ -4,6 +4,7 @@ from systems.inventory_manager import (
     retrieve_inventory,
     distribute_inventory,
     retrieve_item,
+    receive_supplies,
 )
 from systems.hospital import retrieve_hospital_data, retrieve_hospital
 
@@ -13,20 +14,18 @@ def update_inventory_handler(controller):
     action = select_from_list(
         "What do you want to perform?", ["Distribute Items", "Receive Supply"]
     )
+    inventory = retrieve_inventory()
+    item_selection = []
+    for entry in inventory:
+        item_selection.append(
+            f"{entry['item_name']} ({entry['item_code']}) - {entry['quantity']} boxes"
+        )
+
+    unparsed_item_code = select_from_list("Which item is involved?", item_selection)
+    item_code = get_between_parantheses(unparsed_item_code)[0]
+    item = retrieve_item(item_code)
 
     if action == "Distribute Items":
-        inventory = retrieve_inventory()
-        item_selection = []
-        for entry in inventory:
-            item_selection.append(
-                f"{entry['item_name']} ({entry['item_code']}) - {entry['quantity']} boxes"
-            )
-
-        unparsed_item_code = select_from_list(
-            "Which item do you want to distribute", item_selection
-        )
-        item_code = get_between_parantheses(unparsed_item_code)[0]
-        item = retrieve_item(item_code)
         quantity: int = 0
         while True:
             quantity = input("How much boxes are being distributed (numbers only) >> ")
@@ -61,9 +60,23 @@ def update_inventory_handler(controller):
             print(
                 f"[Inventory Manager]: Distributed {quantity} boxes of {item['item_name']} to {hospital['hospital_name']}"
             )
-        from systems.choose_action import choose_action
-
-        choose_action(controller)
 
     elif action == "Receive Supply":
-        print("hi")
+        quantity: int = 0
+        while True:
+            quantity = input("How much boxes are being supplied (numbers only) >> ")
+            if quantity.isdigit():
+                quantity = int(quantity)
+                break
+            else:
+                print("That is not a valid number")
+
+        res = receive_supplies(item_code, quantity, controller)
+        if res:
+            clear_screen()
+            print(
+                f"[Inventory Manager]: Received {quantity} boxes of {item['item_name']}, now we have {item['quantity'] + quantity} boxes!"
+            )
+    from systems.choose_action import choose_action
+
+    choose_action(controller)

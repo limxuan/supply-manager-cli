@@ -5,7 +5,8 @@ from systems.supplier_manager import retrieve_supplier_codes
 
 # Item code, name, suppliercode, quantity
 ppe_data_filepath = "data/ppe.txt"
-distribution_data_filepath = "data/distribution_transactions.txt"
+distribution_transactions_data_filepath = "data/distribution_transactions.txt"
+supply_transactions_data_filepath = "data/supply_transactions.txt"
 
 
 def inventory_initial_creation():
@@ -66,11 +67,13 @@ def add_item_quantity(item_code: str, num_to_add: int):
     save_value(inventory, ppe_data_filepath)
 
 
-def add_distribution(item_code, hospital_code, quantity, date, controller):
+def add_distribution_transaction(item_code, hospital_code, quantity, date, controller):
     try:
-        distribution_data = load_data(distribution_data_filepath)
+        distribution_transaction_data = load_data(
+            distribution_transactions_data_filepath
+        )
     except Exception:
-        distribution_data = []
+        distribution_transaction_data = []
 
     entry = {
         "item_code": item_code,
@@ -79,8 +82,8 @@ def add_distribution(item_code, hospital_code, quantity, date, controller):
         "date": date,
         "controller": controller,
     }
-    distribution_data.append(entry)
-    save_value(distribution_data, distribution_data_filepath)
+    distribution_transaction_data.append(entry)
+    save_value(distribution_transaction_data, distribution_transactions_data_filepath)
     add_item_quantity(item_code, -quantity)
 
 
@@ -93,11 +96,30 @@ def distribute_inventory(item_code, hospital_code, quantity, controller) -> bool
 
     if targetted_item["quantity"] < quantity:
         return False
-    add_distribution(
+    add_distribution_transaction(
         item_code=item_code,
         hospital_code=hospital_code,
         quantity=quantity,
         date=time.time(),
         controller=controller,
     )
+    return True
+
+
+def receive_supplies(item_code, quantity, controller) -> bool:
+    try:
+        supply_transaction_data = load_data(supply_transactions_data_filepath)
+    except Exception:
+        supply_transaction_data = []
+        return False
+
+    entry = {
+        "item_code": item_code,
+        "quantity": quantity,
+        "date": time.time(),
+        "controller": controller,
+    }
+    supply_transaction_data.append(entry)
+    save_value(supply_transaction_data, supply_transactions_data_filepath)
+    add_item_quantity(item_code, quantity)
     return True

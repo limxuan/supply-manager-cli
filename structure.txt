@@ -11,4 +11,4 @@ distribution_transactions.txt
 - ppe Item Code, Hospital Code, Quantity, Date, Controller
 
 supply_transactions.txt
-- ppe Item Code, Quantity, Date, Controller
+- ppe Item Code, Quantity, Date, Controller, 
