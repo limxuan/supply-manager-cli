@@ -1,0 +1,3 @@
+The program would already have data on the suppliers
+There is no need to add more items
+There are no hospitals that has the same name but different address (when displaying hospital options)
