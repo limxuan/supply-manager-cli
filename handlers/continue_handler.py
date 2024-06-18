@@ -2,13 +2,13 @@ from utils.cli import select_from_list, clear_screen
 
 
 def continue_handler(controller):
-    choices = ["Yes", "No"]
+    choices = ["Yes", "Exit the program"]
 
     print(">>\n")
     choice = select_from_list("Do you wish to continue?", choices)
 
     if choice == choices[0]:
-        from systems.choose_action import choose_action
+        from handlers.choose_action import choose_action
 
         clear_screen()
         choose_action(controller)

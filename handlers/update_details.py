@@ -1,11 +1,11 @@
 from utils.cli import select_from_list, clear_screen
 from utils.text_manipulation import convert_to_snake_case, get_between_parantheses
-from systems.supplier_manager import (
+from managers.supplier_manager import (
     retrieve_supplier_codes,
     get_supplier_info,
     update_supplier_data,
 )
-from systems.hospital_manager import (
+from managers.hospital_manager import (
     retrieve_hospital_codes,
     update_hospital_data,
     retrieve_hospital,

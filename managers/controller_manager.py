@@ -6,7 +6,7 @@ from utils.cli import select_from_list, clear_screen
 controlllers_data_filepath = "data/controllers.txt"
 
 
-def controller_selector():
+def controller_manager():
     numberOfFailures = 0
     try:
         values = load_data(controlllers_data_filepath)

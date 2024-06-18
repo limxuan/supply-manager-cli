@@ -1,5 +1,5 @@
 from utils.cli import clear_screen, select_from_list
-from systems.inventory_manager import retrieve_inventory
+from managers.inventory_manager import retrieve_inventory
 
 
 def item_inventory_tracker_handler(controller):

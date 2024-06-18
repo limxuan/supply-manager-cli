@@ -1,10 +1,10 @@
-from systems.controller import controller_selector
+from managers.controller_manager import controller_manager
 from utils.cli import clear_screen
-from systems.choose_action import choose_action
+from handlers.choose_action import choose_action
 
 
 def controller_login() -> str | None:
-    controller = controller_selector()
+    controller = controller_manager()
     if controller:
         print(f"[Controller]: Logged in as {controller} successfully")
         return controller

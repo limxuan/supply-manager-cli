@@ -1,12 +1,9 @@
 from utils.cli import clear_screen, select_from_list
 from utils.text_manipulation import get_between_parantheses
-from systems.inventory_manager import (
-    retrieve_inventory,
-    distribute_inventory,
-    retrieve_item,
-    receive_supplies,
-)
-from systems.hospital_manager import retrieve_hospital_data, retrieve_hospital
+from managers.distribution_manager import distribute_inventory
+from managers.supplier_manager import receive_supplies
+from utils.prompts import prompt_for_items
+from managers.hospital_manager import retrieve_hospital_data, retrieve_hospital
 
 
 def update_inventory_handler(controller):
@@ -14,16 +11,7 @@ def update_inventory_handler(controller):
     action = select_from_list(
         "What do you want to perform?", ["Distribute Items", "Receive Supply"]
     )
-    inventory = retrieve_inventory()
-    item_selection = []
-    for entry in inventory:
-        item_selection.append(
-            f"{entry['item_name']} ({entry['item_code']}) - {entry['quantity']} boxes"
-        )
-
-    unparsed_item_code = select_from_list("Which item is involved?", item_selection)
-    item_code = get_between_parantheses(unparsed_item_code)[0]
-    item = retrieve_item(item_code)
+    item = prompt_for_items("Which item are you performing it on?")
 
     if action == "Distribute Items":
         quantity: int = 0
@@ -54,7 +42,9 @@ def update_inventory_handler(controller):
         hospital_code = get_between_parantheses(unparsed_hospital_code)[0]
         hospital = retrieve_hospital(hospital_code)
 
-        res = distribute_inventory(item_code, hospital_code, quantity, controller)
+        res = distribute_inventory(
+            item["item_code"], hospital_code, quantity, controller
+        )
         if res:
             clear_screen()
             print(
@@ -71,7 +61,7 @@ def update_inventory_handler(controller):
             else:
                 print("That is not a valid number")
 
-        res = receive_supplies(item_code, quantity, controller)
+        res = receive_supplies(item["item_code"], quantity, controller)
         if res:
             clear_screen()
             print(
