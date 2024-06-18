@@ -2,3 +2,4 @@ The program would already have data on the suppliers
 There is no need to add more items
 There are no hospitals that has the same name but different address (when displaying hospital options)
 the supplier of the items doesn't change
+the item name and the item code always stays the same

@@ -2,7 +2,7 @@ ppe.txt
 - Item Code, Supplier Code, Quantity In Stock(Boxes)
 
 suppliers.txt
-- Supplier Code, Supplier Name, Supplier Address
+- Supplier Code, Supplier Person Name, Supplier Company Name,  Supplier Address
 
 hospitals.txt
 - Hospital Code, Hospital Name, Hospital Address

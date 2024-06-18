@@ -1,12 +1,12 @@
 from utils.cli import clear_screen, select_from_list
-from utils.regex import get_between_parantheses
+from utils.text_manipulation import get_between_parantheses
 from systems.inventory_manager import (
     retrieve_inventory,
     distribute_inventory,
     retrieve_item,
     receive_supplies,
 )
-from systems.hospital import retrieve_hospital_data, retrieve_hospital
+from systems.hospital_manager import retrieve_hospital_data, retrieve_hospital
 
 
 def update_inventory_handler(controller):
@@ -77,6 +77,6 @@ def update_inventory_handler(controller):
             print(
                 f"[Inventory Manager]: Received {quantity} boxes of {item['item_name']}, now we have {item['quantity'] + quantity} boxes!"
             )
-    from systems.choose_action import choose_action
+    from handlers.continue_handler import continue_handler
 
-    choose_action(controller)
+    continue_handler(controller)
