@@ -6,6 +6,7 @@ from utils.prompts import prompt_for_items
 from managers.hospital_manager import retrieve_hospital_data, retrieve_hospital
 
 
+# Distribute / Receive Supplies
 def update_inventory_handler(controller):
     clear_screen()
     action = select_from_list(

@@ -1,6 +1,6 @@
 from managers.controller_manager import controller_manager
 from utils.cli import clear_screen
-from handlers.choose_action import choose_action
+from handlers.action_handler import action_handler
 
 
 def controller_login() -> str | None:
@@ -20,7 +20,7 @@ def main():
     if controller is None:
         return
 
-    choose_action(controller)
+    action_handler(controller)
 
 
 main()
