@@ -2,6 +2,7 @@ import time
 from datetime import datetime
 from utils.textfiles_database import load_data, save_value
 from utils.cli import clear_screen, select_from_list
+from utils.misc import timestamp_tostring
 from managers.inventory_manager import retrieve_item
 from managers.hospital_manager import retrieve_hospital
 
@@ -102,10 +103,9 @@ def print_distributions(item_code: str):
     if option == options[0]:
         for entry in distribution_data:
             timestamp = entry["date"]
-            dt_object = datetime.fromtimestamp(timestamp)
-            readable_date_time = dt_object.strftime("%Y-%m-%d %H:%M:%S")
+            readable_date_time = timestamp_tostring(timestamp)
             hospital = retrieve_hospital(entry["hospital_code"])
 
             print(
-                f'[{readable_date_time}] {entry["quantity"]} was distributed to {hospital["hospital_name"]} ({entry["hospital_code"]})'
+                f'[{readable_date_time}] {entry["quantity"]} was distributed to {hospital["hospital_name"]} ({entry["hospital_code"]}) [Controller: {entry["controller"]}]'
             )

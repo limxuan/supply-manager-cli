@@ -1,4 +1,4 @@
-from utils.prompts import prompt_for_items
+from utils.misc import prompt_for_items
 from managers.distribution_manager import print_distributions
 from handlers.continue_handler import continue_handler
 

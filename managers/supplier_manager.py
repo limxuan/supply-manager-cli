@@ -68,3 +68,11 @@ def receive_supplies(item_code, quantity, controller) -> bool:
     save_value(supply_transaction_data, supply_transactions_data_filepath)
     add_item_quantity(item_code, quantity)
     return True
+
+
+def retreive_supply_transactions_data() -> list:
+    try:
+        data = load_data(supply_transactions_data_filepath)
+    except Exception:
+        data = []
+    return data

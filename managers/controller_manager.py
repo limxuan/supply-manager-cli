@@ -14,7 +14,7 @@ def controller_manager():
         values = {}
     while numberOfFailures < 3:
         user_input = select_from_list(
-            "Controller System: Please choose an option", ["Register", "Login"]
+            "Controller System: Please choose an option", ["Login", "Register"]
         )
 
         if user_input.lower() == "register":

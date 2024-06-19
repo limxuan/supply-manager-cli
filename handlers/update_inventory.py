@@ -2,7 +2,7 @@ from utils.cli import clear_screen, select_from_list
 from utils.text_manipulation import get_between_parantheses
 from managers.distribution_manager import distribute_inventory
 from managers.supplier_manager import receive_supplies
-from utils.prompts import prompt_for_items
+from utils.misc import prompt_for_items
 from managers.hospital_manager import retrieve_hospital_data, retrieve_hospital
 
 
