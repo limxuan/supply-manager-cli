@@ -1,9 +1,9 @@
-from utils.cli import clear_screen, select_from_list
-from utils.text_manipulation import get_between_parantheses
 from managers.distribution_manager import distribute_inventory
+from managers.hospital_manager import retrieve_hospital, retrieve_hospital_data
 from managers.supplier_manager import receive_supplies
+from utils.cli import clear_screen, select_from_list
 from utils.misc import prompt_for_items
-from managers.hospital_manager import retrieve_hospital_data, retrieve_hospital
+from utils.text_manipulation import get_between_parantheses
 
 
 # Distribute / Receive Supplies
@@ -18,17 +18,15 @@ def update_inventory_handler(controller):
         quantity: int = 0
         while True:
             quantity = input("How much boxes are being distributed (numbers only) >> ")
-            if quantity.isdigit():
-                quantity = int(quantity)
-                # Check if its distributing  that the currently avaiable
-                if quantity < item["quantity"]:
-                    break
-                else:
-                    print(
-                        f"We only have {item['quantity']} boxes of {item['item_name']}"
-                    )
-            else:
+            if not quantity.isdigit():
                 print("That is not a valid number")
+                continue
+            quantity = int(quantity)
+            # Check if its distributing  that the currently avaiable
+            if quantity > item["quantity"]:
+                print(f"We only have {item['quantity']} boxes of {item['item_name']}")
+                continue
+            break
 
         hospitals_data = retrieve_hospital_data()
         hospital_selection = []

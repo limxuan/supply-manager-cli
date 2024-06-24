@@ -1,0 +1,7 @@
+{
+  "typeCheckingMode": "off",
+  "reportArgumentType": "none",
+  "reportOptionalSubscript": "none",   
+  "reportMissingImports": "none"      
+}
+

@@ -1,6 +1,7 @@
+from handlers.action_handler import action_handler
 from managers.controller_manager import controller_manager
 from utils.cli import clear_screen
-from handlers.action_handler import action_handler
+from utils.inquirer import inquirer
 
 
 def controller_login() -> str | None:
