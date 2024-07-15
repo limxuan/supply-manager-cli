@@ -1,10 +1,10 @@
 import time
-from datetime import datetime
-from utils.textfiles_database import load_data, save_value
+
+from managers.hospital_manager import retrieve_hospital
+from managers.inventory_manager import retrieve_item
 from utils.cli import clear_screen, select_from_list
 from utils.misc import timestamp_tostring
-from managers.inventory_manager import retrieve_item
-from managers.hospital_manager import retrieve_hospital
+from utils.textfiles_database import load_data, save_value
 
 distribution_transactions_data_filepath = "data/distribution_transactions.txt"
 

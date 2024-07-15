@@ -1,7 +1,5 @@
-import os
-
+from utils.cli import clear_screen, select_from_list
 from utils.textfiles_database import load_data, save_value
-from utils.cli import select_from_list, clear_screen
 
 controlllers_data_filepath = "data/controllers.txt"
 
@@ -44,8 +42,8 @@ def controller_manager():
                 print("Wrong password")
                 numberOfFailures += 1
                 continue
-            os.system("cls" if os.name == "nt" else "clear")
+            clear_screen()
             return username_input
     else:
-        os.system("cls" if os.name == "nt" else "clear")
+        clear_screen()
         return None

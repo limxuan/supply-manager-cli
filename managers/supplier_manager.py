@@ -1,6 +1,7 @@
 import time
-from utils.textfiles_database import load_data, save_value
+
 from managers.inventory_manager import add_item_quantity
+from utils.textfiles_database import load_data, save_value
 
 supplier_data_filepath = "data/suppliers.txt"
 supply_transactions_data_filepath = "data/supply_transactions.txt"
@@ -51,12 +52,11 @@ def update_supplier_data(supplier_code, data):
     save_value(supplier_data, supplier_data_filepath)
 
 
-def receive_supplies(item_code, quantity, controller) -> bool:
+def receive_supplies(item_code, quantity, controller):
     try:
         supply_transaction_data = load_data(supply_transactions_data_filepath)
     except Exception:
         supply_transaction_data = []
-        return False
 
     entry = {
         "item_code": item_code,
@@ -67,7 +67,6 @@ def receive_supplies(item_code, quantity, controller) -> bool:
     supply_transaction_data.append(entry)
     save_value(supply_transaction_data, supply_transactions_data_filepath)
     add_item_quantity(item_code, quantity)
-    return True
 
 
 def retreive_supply_transactions_data() -> list:

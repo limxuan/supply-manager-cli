@@ -1,5 +1,5 @@
-from utils.textfiles_database import save_value, load_data
-from utils.cli import select_from_list, clear_screen
+from utils.cli import clear_screen, select_from_list
+from utils.textfiles_database import load_data, save_value
 
 # Item code, name, suppliercode, quantity
 ppe_data_filepath = "data/ppe.txt"
