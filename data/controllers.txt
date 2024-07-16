@@ -1,1 +1,1 @@
-{'admin': '\x1b\x1b', 'heh': 'hehe', 'We woo': 'hehe', 'Hehe': 'kek'}
+{'admin': b'$2b$12$9GR4Q4Uchz9FSkjskUwZzea8xl39R..X2agX.q3OHCRbzl.zRvtIC'}
