@@ -60,12 +60,11 @@ def update_inventory_handler(controller):
             else:
                 print("That is not a valid number")
 
-        res = receive_supplies(item["item_code"], quantity, controller)
-        if res:
-            clear_screen()
-            print(
-                f"[Inventory Manager]: Received {quantity} boxes of {item['item_name']}, now we have {item['quantity'] + quantity} boxes!"
-            )
+        receive_supplies(item["item_code"], quantity, controller)
+        clear_screen()
+        print(
+            f"[Inventory Manager]: Received {quantity} boxes of {item['item_name']}, now we have {item['quantity'] + quantity} boxes!"
+        )
     from handlers.continue_handler import continue_handler
 
     continue_handler(controller)
