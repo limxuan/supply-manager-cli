@@ -3,6 +3,11 @@ research about json data structure how its better to store data with it
 
 
 # additional features
-password encryption with sha256 when registration and saving the data
-when input password hide the input with a *
-change to table displaying data
+password hashing with bcrypt
+change to table displaying data w/tabulate
+view all supplier details
+view all hospital details
+admin controls
+  - remove user
+  - view all controllers (admin only)
+

@@ -1,3 +1,5 @@
+from tabulate import tabulate
+
 from handlers.continue_handler import continue_handler
 from managers.distribution_manager import retrieve_distribution_data
 from managers.hospital_manager import retrieve_hospital
@@ -6,6 +8,7 @@ from managers.supplier_manager import (get_supplier_info,
                                        retreive_supply_transactions_data)
 from utils.cli import clear_screen, select_from_list
 from utils.misc import timestamp_to_monthyear, timestamp_tostring
+from utils.tables import create_table_extend, tabularize
 
 
 def report_handler(controller):
@@ -118,45 +121,91 @@ def distributions_and_supplies_month():
     )
     clear_screen()
 
-    print(f"[Report Handler]: Distributions for {month_year_selection}\n")
+    print(
+        f"[Report Handler]: Distributions & Supplies Report for {month_year_selection}\n"
+    )
     map_value = date_data_map[month_year_selection]
+    if "distribution_transactions" in map_value:
+        distribution_data = map_value["distribution_transactions"]
+        # Hospital, total distributions, item(s)
+        distribution_table = []
+        total_distributions = 0
 
-    # Print distributions
-    print("(Distributions)")
-    if "distribution_transactions" not in map_value:
-        print("   No distributions!")
-    else:
-        distribution_transactions = map_value["distribution_transactions"]
-        for index, hospital_code in enumerate(distribution_transactions):
+        # Loop over every single hospital in data
+        for entry in distribution_data:
+            hospital_code = entry
             hospital = retrieve_hospital(hospital_code)
-            print(
-                f"{index + 1}. {hospital['hospital_name']}\n   Address: {hospital['hospital_address']}"
-            )
-            print(
-                f'   Total distributions: {distribution_transactions[hospital_code]["total_quantity"]} boxes'
-            )
-            for item_code in distribution_transactions[hospital_code]["items"]:
+            entry_value = distribution_data[hospital_code]
+            total_distributions = entry_value["total_quantity"]
+            items = entry_value["items"]
+            hospital_table = [
+                f"{hospital['hospital_name']} ({hospital_code})",
+                f"{total_distributions} boxes",
+            ]
+            items_distributed = []
+            for item_code in items:
                 item = retrieve_item(item_code)
-                print(
-                    f'     - {item["item_name"]} ({item_code}): {distribution_transactions[hospital_code]["items"][item_code]} boxes'
+                items_distributed.append(
+                    f"{item['item_name']} ({item_code}) - {items[item_code]} boxes"
                 )
-            print("\n")
-
-    print("(Supply Received)")
-    if "supply_transactions" not in map_value:
-        print("   No supply received!")
-    else:
-        supply_transactions = map_value["supply_transactions"]
+                total_distributions += items[item_code]
+            hospital_table.append("\n".join(items_distributed))
+            distribution_table.append(hospital_table)
+        print(f"Total distributions: {total_distributions} boxes")
         print(
-            f"Total supply boxes received: {map_value['supply_transactions']['total_quantity']} boxes"
-        )
-        for index, item_code in enumerate(supply_transactions["items"]):
-            item = retrieve_item(item_code)
-            print(
-                f'   {index + 1}. {item["item_name"]} {supply_transactions["items"][item_code]} boxes'
+            tabulate(
+                distribution_table,
+                headers=["Hospital", "Total distributed", "Item(s) distributed"],
+                tablefmt="simple_grid",
             )
+        )
+
+    else:
+        print("No distribution transactions found.")
+
+    print("\n")
+
+    # Print supply transactions
+    if "supply_transactions" in map_value:
+        supply_data = map_value["supply_transactions"]
+        total_quantity = supply_data["total_quantity"]
+        items = supply_data["items"]
+        print(f"Supply received: {total_quantity} boxes")
+        # Item Code, Item Name, Item Quantity, Supplied by
+        supply_table = []
+        item_code_table = []
+        item_name_table = []
+        item_quantity_table = []
+        supplied_by_table = []
+        for item_code in items:
+            item = retrieve_item(item_code)
             supplier = get_supplier_info(item["supplier_code"])
-            print(f'      Supplier: {supplier["supplier_company_name"]}')
+            item_code_table.append(item_code)
+            item_name_table.append(item["item_name"])
+            item_quantity_table.append(f"{ items[item_code] } boxes")
+            supplied_by_table.append(
+                f"{supplier['supplier_company_name']} ({supplier['supplier_code']})"
+            )
+        supply_table.extend(
+            [
+                [
+                    "\n".join(item_code_table),
+                    "\n".join(item_name_table),
+                    "\n".join(item_quantity_table),
+                    "\n".join(supplied_by_table),
+                ],
+            ]
+        )
+        print(
+            tabulate(
+                supply_table,
+                headers=["Item Code", "Item Name", "Quantity Received", "Supplied by"],
+                tablefmt="simple_grid",
+            )
+        )
+
+    else:
+        print("No supply transactions found.")
 
 
 def suppliers_and_equipments():
@@ -175,22 +224,34 @@ def suppliers_and_equipments():
 
     clear_screen()
     print("[Report Handler]: Supplier along with their equipments supplied\n")
+    output_table = []
     for supplier_code in supplier_items_map:
         supplier = get_supplier_info(supplier_code)
-        print(
-            f'[Supplier Code: {supplier["supplier_code"]}] {supplier["supplier_company_name"]} ({supplier["supplier_person_name"]})'
+        to_append = [supplier_code, supplier["supplier_company_name"]]
+        item_list = supplier_items_map[supplier_code]
+        to_append.extend(
+            create_table_extend(item_list, ["item_code", "item_name", "quantity"])
         )
-
-        for index, item in enumerate(supplier_items_map[supplier_code]):
-            print(f"\t{index + 1}) {item['item_name']} (Code: {item['item_code']})")
-        print("\n")
+        output_table.append(to_append)
+    print(
+        tabularize(
+            output_table,
+            headers=[
+                "Supplier Code",
+                "Supplier Name",
+                "Item Code",
+                "Item Name",
+                "Current Quantity (Boxes)",
+            ],
+        )
+    )
 
 
 def hospitals_and_distributions():
     # Get all distributions
     distribution_data = retrieve_distribution_data()
     view_transaction_report_input = select_from_list(
-        "Do you want to view every single transaction log aswell?",
+        "Would you wish to see every single transaction recorded?",
         ["Yes", "No (Show the summarised report)"],
     )
     view_transaction_report = view_transaction_report_input == "Yes"
@@ -207,20 +268,22 @@ def hospitals_and_distributions():
     hospital_distribution_map = {}
     for entry in distribution_data:
         # {'item_code': 'HC', 'hospital_code': 'H1', 'quantity': 4, 'date': 1718633537.693726, 'controller': 'heh'}
-        key = entry["hospital_code"]
+        hospital_code = entry["hospital_code"]
+        item = retrieve_item(entry["item_code"])
         map_value = {
-            "item": retrieve_item(entry["item_code"]),
+            "item": item,
+            "supplier_data": get_supplier_info(item["supplier_code"]),
             "quantity": entry["quantity"],
             "date": timestamp_tostring(entry["date"]),
             "controller": entry["controller"],
         }
-        if key in hospital_distribution_map:
-            hospital_distribution_map[key]["total_quantity_distributed"] += entry[
-                "quantity"
-            ]
-            hospital_distribution_map[key]["transactions"].append(map_value)
+        if hospital_code in hospital_distribution_map:
+            hospital_distribution_map[hospital_code][
+                "total_quantity_distributed"
+            ] += entry["quantity"]
+            hospital_distribution_map[hospital_code]["transactions"].append(map_value)
         else:
-            hospital_distribution_map[key] = {
+            hospital_distribution_map[hospital_code] = {
                 "total_quantity_distributed": entry["quantity"],
                 "transactions": [map_value],
             }
@@ -229,19 +292,49 @@ def hospitals_and_distributions():
     print(
         "[Report Handler]: Hospital along with the items that was distributed to them\n"
     )
-    for key in hospital_distribution_map:
-        hospital = retrieve_hospital(key)
-        print(
-            f'[Hospital Code: {hospital["hospital_code"]}] {hospital["hospital_name"]} @ ({hospital["hospital_address"]})'
-        )
-        print(
-            f"Total quantity of boxes supplied: {hospital_distribution_map[key]['total_quantity_distributed']}"
-        )
+    for idx, hospital_code in enumerate(hospital_distribution_map):
+        hospital = retrieve_hospital(hospital_code)
+        hospital_output = [
+            f"{idx + 1}. {hospital['hospital_name']}",
+            f"   Total distributions: {hospital_distribution_map[hospital_code]['total_quantity_distributed']} boxes",
+            f"   Hospital Code: { hospital['hospital_code'] }",
+            f'   Hospital Address:{hospital["hospital_address"] }',
+            "",
+        ]
+        print("\n".join(hospital_output))
 
         if view_transaction_report:
             print("Transactions:")
-            for transaction in hospital_distribution_map[key]["transactions"]:
-                print(
-                    f"\t[{transaction['date']}] ({transaction['quantity']} boxes) {transaction['item']['item_name']} (Code: {transaction['item']['item_code']}) - (Controller: {transaction['controller']})"
+            transaction_table = []
+            transactions = hospital_distribution_map[hospital_code]["transactions"]
+            transaction_table.append(
+                create_table_extend(
+                    transactions,
+                    [
+                        "date",
+                        "item.item_code",
+                        "item.item_name",
+                        "supplier_data.supplier_code",
+                        "supplier_data.supplier_company_name",
+                        "quantity",
+                        "controller",
+                    ],
                 )
+            )
+            print(
+                tabularize(
+                    transaction_table,
+                    [
+                        "Date & Time",
+                        "Item Code",
+                        "Item Name",
+                        "Supplier Code",
+                        "Company Name",
+                        "Quantity Distributed",
+                        "Controller",
+                    ],
+                    numbering=False,
+                )
+            )
+
         print("\n")

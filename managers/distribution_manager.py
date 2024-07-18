@@ -1,5 +1,7 @@
 import time
 
+from tabulate import tabulate
+
 from managers.hospital_manager import retrieve_hospital
 from managers.inventory_manager import retrieve_item
 from utils.cli import clear_screen, select_from_list
@@ -86,12 +88,23 @@ def print_distributions(item_code: str):
     print(
         f'[Distribution Manager]: Distribution data for {item["item_name"]} ({item["item_code"]})\n'
     )
+    output_table = []
     for hospital_code in summed_distribution_data:
         hospital = retrieve_hospital(hospital_code)
-
-        print(
-            f"{summed_distribution_data[hospital_code]} boxes was distributed to {hospital['hospital_name']} ({hospital['hospital_code']})"
+        output_table.append(
+            [
+                hospital_code,
+                hospital["hospital_name"],
+                summed_distribution_data[hospital_code],
+            ]
         )
+    print(
+        tabulate(
+            output_table,
+            headers=["Hospital Code", "Hospital Name", "Quantity Distributed (boxes)"],
+            tablefmt="mixed_grid",
+        )
+    )
 
     print(">>\n")
     options = ["Yes", "No"]
@@ -101,11 +114,31 @@ def print_distributions(item_code: str):
     )
 
     if option == options[0]:
+        transactions_table = []
         for entry in distribution_data:
             timestamp = entry["date"]
             readable_date_time = timestamp_tostring(timestamp)
             hospital = retrieve_hospital(entry["hospital_code"])
-
-            print(
-                f'[{readable_date_time}] {entry["quantity"]} was distributed to {hospital["hospital_name"]} ({entry["hospital_code"]}) [Controller: {entry["controller"]}]'
+            transactions_table.append(
+                [
+                    readable_date_time,
+                    entry["hospital_code"],
+                    entry["quantity"],
+                    entry["controller"],
+                ]
             )
+
+            # print(
+            #     f'[{readable_date_time}] {entry["quantity"]} was distributed to {hospital["hospital_name"]} ({entry["hospital_code"]}) [Controller: {entry["controller"]}]'
+            # )
+        print(
+            tabulate(
+                transactions_table,
+                headers=[
+                    "Date & Time",
+                    "Hospital Code",
+                    "Quantity Distributed (boxes)",
+                    "Controller",
+                ],
+            )
+        )
