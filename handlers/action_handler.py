@@ -1,3 +1,4 @@
+from handlers.admin_handler import admin_handler
 from handlers.exit_handler import exit_handler
 from handlers.item_inventory_tracker import item_inventory_tracker_handler
 from handlers.remove_user_handler import remove_user_handler
@@ -19,7 +20,7 @@ def action_handler(controller):
         "Exit": exit_handler,
     }
     if controller == "admin":
-        handlers["Remove a user"] = remove_user_handler
+        handlers["Admin Actions"] = admin_handler
     action = select_from_list("What action do you want to perform?", handlers.keys())
 
     handlers[action](controller)

@@ -1,15 +1,16 @@
 import bcrypt
+from tabulate import tabulate
 
 from utils.cli import clear_screen, select_from_list
 from utils.textfiles_database import load_data, save_value
 
-controlllers_data_filepath = "data/controllers.txt"
+controllers_data_filepath = "data/controllers.txt"
 
 
 def controller_manager():
     numberOfFailures = 0
     try:
-        user_hash_map = load_data(controlllers_data_filepath)
+        user_hash_map = load_data(controllers_data_filepath)
     except Exception:
         user_hash_map = {}
     while numberOfFailures < 3:
@@ -33,7 +34,7 @@ def controller_manager():
             password = input("Please enter your password: ")
             registration_details[username] = hash(password)
             user_hash_map.update(registration_details)
-            save_value(user_hash_map, controlllers_data_filepath)
+            save_value(user_hash_map, controllers_data_filepath)
             clear_screen()
             print(f'[Controller Manager]: Registered user "{username}" successfully!')
         elif user_input.lower() == "login":
@@ -56,6 +57,57 @@ def controller_manager():
     else:
         clear_screen()
         return None
+
+
+def retrieve_controllers() -> dict:
+    controller_data = load_data(controllers_data_filepath)
+    return controller_data
+
+
+def remove_controller() -> str:
+    controller_data = retrieve_controllers()
+    options = list(controller_data.keys())
+    options.remove("admin")
+    options.append("Cancel")
+
+    controller_to_remove = select_from_list(
+        "Which controller do you want to remove?", options
+    )
+
+    if controller_to_remove == "Cancel":
+        return None
+
+    controller_data.pop(controller_to_remove)
+    save_value(controller_data, controllers_data_filepath)
+    return controller_to_remove
+
+
+def print_removed_controllers():
+    removed_controller = remove_controller()
+    # check if removed_conrroller is none
+    clear_screen()
+    if removed_controller is None:
+        print("[Controller Manager]: Action cancelled successfully")
+    else:
+        print(f"[Controller Manager] {removed_controller} has been removed")
+
+
+def print_controllers():
+    controllers = retrieve_controllers()
+    output_table = []
+    clear_screen()
+    print("[Controller manager]: List of controllers:")
+    for username in controllers:
+        output_table.append([username])
+
+    print(
+        tabulate(
+            output_table,
+            headers=["Username"],
+            showindex=range(1, len(controllers) + 1),
+            tablefmt="simple_grid",
+        )
+    )
 
 
 def hash(password):
