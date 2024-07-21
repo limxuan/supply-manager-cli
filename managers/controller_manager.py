@@ -1,3 +1,5 @@
+from getpass import getpass
+
 import bcrypt
 from tabulate import tabulate
 
@@ -31,7 +33,12 @@ def controller_manager():
                 clear_screen()
                 print(f'[Error]: Username "{username}" already exists')
                 continue
-            password = input("Please enter your password: ")
+            password = getpass("Please enter your password: ")
+            clear_screen()
+            password_confirmation = getpass("Please re-enter your password: ")
+            if password != password_confirmation:
+                print("[Error]: password confirmation and password doesn't match!")
+                continue
             registration_details[username] = hash(password)
             user_hash_map.update(registration_details)
             save_value(user_hash_map, controllers_data_filepath)
@@ -45,7 +52,7 @@ def controller_manager():
                 numberOfFailures += 1
                 continue
 
-            password_input = input("Password: ")
+            password_input = getpass("Password: ")
             match = check_password(password_input, user_hash_map[username_input])
             if not match:
                 clear_screen()

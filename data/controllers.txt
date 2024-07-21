@@ -1,1 +1,1 @@
-{'admin': b'$2b$12$9GR4Q4Uchz9FSkjskUwZzea8xl39R..X2agX.q3OHCRbzl.zRvtIC'}
+{'admin': b'$2b$12$9GR4Q4Uchz9FSkjskUwZzea8xl39R..X2agX.q3OHCRbzl.zRvtIC', 'test': b'$2b$12$wVUKpJeZ2VZGXB.646ja..AdMI30yH0CVBNF9jaES0ibQNeR7Erpa'}

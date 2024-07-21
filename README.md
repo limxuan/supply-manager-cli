@@ -4,10 +4,6 @@ research about json data structure how its better to store data with it
 password hashing
 displaying data with tables
 
-# TODO 
-- [ ] refactor manager and handler
-- [ ] password confirmation when registration
-
 # additional features
 - [x] password hashing with bcrypt
 - [x] change to table displaying data w/tabulate
