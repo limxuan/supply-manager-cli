@@ -11,17 +11,17 @@ displaying data with tables
 # additional features
 - [x] password hashing with bcrypt
 - [x] change to table displaying data w/tabulate
-- [ ] view all supplier details
-- [ ] view all hospital details
-- [ ] Search
-  - [ ] search for items
-  - [ ] search for hospitals
-  - [ ] search for suppliers
-- [ ] Item inventory tracking
-  - [ ] Lesser than what a user specified
-- [ ] admin controls
-  - [ ] remove user
-  - [ ] view all controllers (admin only)
+- [x] view all supplier details
+- [x] view all hospital details
+- [x] Search
+  - [x] search for items
+  - [x] search for hospitals
+  - [x] search for suppliers
+- [x] Item inventory tracking
+  - [x] Lesser than what a user specified
+- [x] admin controls
+  - [x] remove user
+  - [x] view all controllers (admin only)
 
 # list of files modified
 - handlers

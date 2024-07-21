@@ -7,7 +7,11 @@ from utils.cli import clear_screen, select_from_list
 
 def item_inventory_tracker_handler(controller):
     clear_screen()
-    action_selection = ["Quantity of All Items", "Items that has lesser than 25 boxes"]
+    action_selection = [
+        "Quantity of All Items",
+        "Items that has lesser than 25 boxes",
+        "Items that fall between a certain range",
+    ]
     action = select_from_list(
         "[Inventory Manager]: Which action do you wish to perform?", action_selection
     )
@@ -29,10 +33,35 @@ def item_inventory_tracker_handler(controller):
                 "[Inventory Manager]: List of items with quantity is lesser than 25 boxes: \n"
             )
             display_items(filtered_list)
+    else:
+        display_items_between_range(inventory)
 
     from handlers.continue_handler import continue_handler
 
     continue_handler(controller)
+
+
+def get_valid_input(prompt):
+    while True:
+        value = input(prompt)
+        if value.isdigit():
+            return int(value)
+        else:
+            print("That is not a valid number")
+
+
+def display_items_between_range(inventory):
+    starting_range = get_valid_input("What is the starting range: ")
+    ending_range = get_valid_input("What is the ending range: ")
+    filtered_list = list(
+        filter(lambda x: starting_range <= x["quantity"] <= ending_range, inventory)
+    )
+    if len(filtered_list) == 0:
+        print(
+            f"[Inventory Manager]: There are no items that fit in the range of ({starting_range} - {ending_range})"
+        )
+    else:
+        display_items(filtered_list)
 
 
 def display_items(data):
