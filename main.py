@@ -1,6 +1,9 @@
+from tabulate import tabulate
+
 from handlers.action_handler import action_handler
 from managers.controller_manager import controller_manager
 from utils.cli import clear_screen
+from utils.dependencies import import_or_install
 
 
 def controller_login() -> str | None:
@@ -15,6 +18,7 @@ def controller_login() -> str | None:
 
 # Login System
 def main():
+    import_or_install("tabulate")
     clear_screen()
     controller = controller_login()
     if controller is None:

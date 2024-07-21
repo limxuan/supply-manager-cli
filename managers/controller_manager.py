@@ -1,9 +1,7 @@
 from getpass import getpass
 
-import bcrypt
-from tabulate import tabulate
-
 from utils.cli import clear_screen, select_from_list
+from utils.dependencies import bcrypt, tabulate
 from utils.textfiles_database import load_data, save_value
 
 controllers_data_filepath = "data/controllers.txt"

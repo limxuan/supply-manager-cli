@@ -11,5 +11,6 @@ def import_or_install(module_name):
         return __import__(module_name)
 
 
-# Automatically install and import 'inquirer'
 inquirer = import_or_install("inquirer")
+bcrypt = import_or_install("bcrypt")
+tabulate = import_or_install("tabulate")

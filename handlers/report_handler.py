@@ -4,8 +4,10 @@ from handlers.continue_handler import continue_handler
 from managers.distribution_manager import retrieve_distribution_data
 from managers.hospital_manager import retrieve_hospital
 from managers.inventory_manager import retrieve_inventory, retrieve_item
-from managers.supplier_manager import (get_supplier_info,
-                                       retreive_supply_transactions_data)
+from managers.supplier_manager import (
+    get_supplier_info,
+    retreive_supply_transactions_data,
+)
 from utils.cli import clear_screen, select_from_list
 from utils.misc import timestamp_to_monthyear, timestamp_tostring
 from utils.tables import create_table_extend, tabularize

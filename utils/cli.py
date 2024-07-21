@@ -1,6 +1,6 @@
 import os
 
-from utils.inquirer import inquirer
+from utils.dependencies import inquirer
 
 
 def select_from_list(question: str, options: list) -> str:
