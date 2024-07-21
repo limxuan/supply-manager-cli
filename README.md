@@ -36,8 +36,6 @@ a/main.py b/main.py
 a/managers/controller_manager.py b/managers/controller_manager.py
 a/managers/distribution_manager.py b/managers/distribution_manager.py
 a/managers/supplier_manager.py b/managers/supplier_manager.py
-a/requirements.txt b/requirements.txt
-a/todo.md b/todo.md
 a/utils/cli.py b/utils/cli.py
 a/utils/inquirer.py b/utils/dependencies.py
 a/utils/tables.py b/utils/tables.py
