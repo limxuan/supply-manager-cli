@@ -10,7 +10,7 @@ def item_inventory_tracker_handler(controller):
     action_selection = [
         "Quantity of All Items",
         "Items that has lesser than 25 boxes",
-        "Items that fall between a certain range",
+        "Custom item quantity range",
     ]
     action = select_from_list(
         "[Inventory Manager]: Which action do you wish to perform?", action_selection
