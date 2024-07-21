@@ -1,18 +1,15 @@
 from tabulate import tabulate
 
 from handlers.continue_handler import continue_handler
-from managers.hospital_manager import (
-    retrieve_hospital,
-    retrieve_hospital_codes,
-    update_hospital_data,
-)
-from managers.supplier_manager import (
-    get_supplier_info,
-    retrieve_supplier_codes,
-    update_supplier_data,
-)
+from managers.hospital_manager import (retrieve_hospital,
+                                       retrieve_hospital_codes,
+                                       update_hospital_data)
+from managers.supplier_manager import (get_supplier_info,
+                                       retrieve_supplier_codes,
+                                       update_supplier_data)
 from utils.cli import clear_screen, select_from_list
-from utils.text_manipulation import convert_to_snake_case, get_between_parantheses
+from utils.text_manipulation import (convert_to_snake_case,
+                                     get_between_parantheses)
 from utils.textfiles_database import load_data
 
 
@@ -221,6 +218,7 @@ def view_details_handler():
 def view_details_handler():
     options = ["Items", "Hospitals", "Suppliers"]
     selection = select_from_list("Which category do you want to view?", options)
+    clear_screen()
     heading = f"[Details Handler]: Details on {selection}"
     headers = []
     filepath = "data/"

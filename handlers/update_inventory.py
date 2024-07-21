@@ -1,3 +1,4 @@
+from handlers.continue_handler import continue_handler
 from managers.distribution_manager import distribute_inventory
 from managers.hospital_manager import retrieve_hospital, retrieve_hospital_data
 from managers.supplier_manager import receive_supplies
@@ -6,7 +7,7 @@ from utils.misc import prompt_for_items
 from utils.text_manipulation import get_between_parantheses
 
 
-def distribute_inventory(controller):
+def distribute_inventory_handler(controller):
     clear_screen()
     item = prompt_for_items("Which item are you performing it on?")
     quantity: int = 0
@@ -41,9 +42,10 @@ def distribute_inventory(controller):
         print(
             f"[Inventory Manager]: Distributed {quantity} boxes of {item['item_name']} to {hospital['hospital_name']}"
         )
+    continue_handler(controller)
 
 
-def receive_supplies(controller):
+def receive_supplies_handler(controller):
     clear_screen()
     item = prompt_for_items("Which item are you performing it on?")
     quantity: int = 0
@@ -58,3 +60,4 @@ def receive_supplies(controller):
     if res:
         clear_screen()
         print(f"[Inventory Manager]: Received {quantity} boxes of {item['item_name']}")
+    continue_handler(controller)
