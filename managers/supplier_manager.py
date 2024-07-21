@@ -33,7 +33,7 @@ def get_supplier_info(supplier_code):
         return None
 
 
-def retreive_supplier_data() -> list:
+def retrieve_supplier_data() -> list:
     try:
         data = load_data(supplier_data_filepath)
     except Exception:
@@ -42,7 +42,7 @@ def retreive_supplier_data() -> list:
 
 
 def update_supplier_data(supplier_code, data):
-    supplier_data = retreive_supplier_data()
+    supplier_data = retrieve_supplier_data()
     for i, entry in enumerate(supplier_data):
         if entry["supplier_code"] == supplier_code:
             supplier_data[i] = data
