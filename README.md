@@ -5,7 +5,10 @@ password hashing
 displaying data with tables
 
 # additional features
-- [x] password hashing with bcrypt
+- [x] password 
+  - [x] hashing with bcrypt
+  - [x] hide password input with getpass
+  - [x] second confirmation for password during registration
 - [x] change to table displaying data w/tabulate
 - [x] view all supplier details
 - [x] view all hospital details
