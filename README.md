@@ -19,17 +19,30 @@ displaying data with tables
   - [x] remove user
   - [x] view all controllers (admin only)
 
-# list of files modified
-- handlers
-  - action_handler
-  - remove_user_handler
-  - item_inventory_tracker
-  - report_handler
-- managers
-  - controller_manager
-  - distribution_manager
-- utils
-  - tables.py
+
+# List of files modified
+```
+a/features.md b/features.md
+a/handlers/action_handler.py b/handlers/action_handler.py
+a/handlers/admin_handler.py b/handlers/admin_handler.py
+a/handlers/details_handler.py b/handlers/details_handler.py
+a/handlers/item_inventory_tracker.py b/handlers/item_inventory_tracker.py
+a/handlers/remove_user_handler.py b/handlers/remove_user_handler.py
+a/handlers/report_handler.py b/handlers/report_handler.py
+a/handlers/search_handler.py b/handlers/search_handler.py
+a/handlers/update_details.py b/handlers/update_details.py
+a/handlers/update_inventory.py b/handlers/update_inventory.py
+a/main.py b/main.py
+a/managers/controller_manager.py b/managers/controller_manager.py
+a/managers/distribution_manager.py b/managers/distribution_manager.py
+a/managers/supplier_manager.py b/managers/supplier_manager.py
+a/requirements.txt b/requirements.txt
+a/todo.md b/todo.md
+a/utils/cli.py b/utils/cli.py
+a/utils/inquirer.py b/utils/dependencies.py
+a/utils/tables.py b/utils/tables.py
+```
+
 
 ### Inventory Tracking System Command Structure
 
