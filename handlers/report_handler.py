@@ -4,10 +4,8 @@ from handlers.continue_handler import continue_handler
 from managers.distribution_manager import retrieve_distribution_data
 from managers.hospital_manager import retrieve_hospital
 from managers.inventory_manager import retrieve_inventory, retrieve_item
-from managers.supplier_manager import (
-    get_supplier_info,
-    retreive_supply_transactions_data,
-)
+from managers.supplier_manager import (get_supplier_info,
+                                       retreive_supply_transactions_data)
 from utils.cli import clear_screen, select_from_list
 from utils.misc import timestamp_to_monthyear, timestamp_tostring
 from utils.tables import create_table_extend, tabularize
@@ -151,14 +149,15 @@ def distributions_and_supplies_month():
                     f"{item['item_name']} ({item_code}) - {items[item_code]} boxes"
                 )
                 total_distributions += items[item_code]
-            hospital_table.append("\n".join(items_distributed))
+            hospital_table.insert(1, "\n".join(items_distributed))
             distribution_table.append(hospital_table)
         print(f"Total distributions: {total_distributions} boxes")
         print(
             tabulate(
                 distribution_table,
-                headers=["Hospital", "Total distributed", "Item(s) distributed"],
+                headers=["Hospital", "Item(s) distributed", "Total distributed"],
                 tablefmt="simple_grid",
+                showindex=range(1, len(distribution_table) + 1),
             )
         )
 
@@ -175,34 +174,23 @@ def distributions_and_supplies_month():
         print(f"Supply received: {total_quantity} boxes")
         # Item Code, Item Name, Item Quantity, Supplied by
         supply_table = []
-        item_code_table = []
-        item_name_table = []
-        item_quantity_table = []
-        supplied_by_table = []
         for item_code in items:
+            column = []
             item = retrieve_item(item_code)
             supplier = get_supplier_info(item["supplier_code"])
-            item_code_table.append(item_code)
-            item_name_table.append(item["item_name"])
-            item_quantity_table.append(f"{ items[item_code] } boxes")
-            supplied_by_table.append(
+            column.append(item_code)
+            column.append(item["item_name"])
+            column.append(f"{ items[item_code] } boxes")
+            column.append(
                 f"{supplier['supplier_company_name']} ({supplier['supplier_code']})"
             )
-        supply_table.extend(
-            [
-                [
-                    "\n".join(item_code_table),
-                    "\n".join(item_name_table),
-                    "\n".join(item_quantity_table),
-                    "\n".join(supplied_by_table),
-                ],
-            ]
-        )
+            supply_table.append(column)
         print(
             tabulate(
                 supply_table,
                 headers=["Item Code", "Item Name", "Quantity Received", "Supplied by"],
                 tablefmt="simple_grid",
+                showindex=range(1, len(supply_table) + 1),
             )
         )
 

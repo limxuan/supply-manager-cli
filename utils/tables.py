@@ -29,7 +29,7 @@ def create_table_extend(data_input, locations):
     return ["\n".join(map(str, sublist)) for sublist in result]
 
 
-def tabularize(list_of_unknown_type, headers, numbering=True, tablefmt="mixed_grid"):
+def tabularize(list_of_unknown_type, headers, numbering=True, tablefmt="simple_grid"):
     table = []
     table.append(headers)
     for unknown_type in list_of_unknown_type:

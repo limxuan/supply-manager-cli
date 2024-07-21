@@ -102,7 +102,7 @@ def print_distributions(item_code: str):
         tabulate(
             output_table,
             headers=["Hospital Code", "Hospital Name", "Quantity Distributed (boxes)"],
-            tablefmt="mixed_grid",
+            tablefmt="simple_grid",
         )
     )
 
