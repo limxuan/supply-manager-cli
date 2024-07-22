@@ -7,6 +7,7 @@ displaying data with tables
 
 # additional features
 - [x] Back Button for all selections
+- [x] installs dependencies if not found
 - [x] password 
   - [x] hashing with bcrypt
   - [x] hide password input with getpass
