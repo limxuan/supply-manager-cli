@@ -1,0 +1,2968 @@
+diff --git a/.DS_Store b/.DS_Store
+deleted file mode 100644
+index 26c154e..0000000
+Binary files a/.DS_Store and /dev/null differ
+diff --git a/.gitignore b/.gitignore
+index 894a44c..b08da1f 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -1,3 +1,6 @@
++test.py
++**/.DS_Store
++
+ # Byte-compiled / optimized / DLL files
+ __pycache__/
+ *.py[cod]
+diff --git a/README.md b/README.md
+new file mode 100644
+index 0000000..2ae8968
+--- /dev/null
++++ b/README.md
+@@ -0,0 +1,82 @@
++
++# things to talk about
++research about json data structure how its better to store data with it
++password hashing
++displaying data with tables
++
++# additional features
++- [x] password 
++  - [x] hashing with bcrypt
++  - [x] hide password input with getpass
++  - [x] second confirmation for password during registration
++- [x] change to table displaying data w/tabulate
++- [x] view all supplier details
++- [x] view all hospital details
++- [x] Search
++  - [x] search for items
++  - [x] search for hospitals
++  - [x] search for suppliers
++- [x] Item inventory tracking
++  - [x] Lesser than what a user specified
++- [x] admin controls
++  - [x] remove user
++  - [x] view all controllers (admin only)
++
++
++# List of files modified
++```
++a/features.md b/features.md
++a/handlers/action_handler.py b/handlers/action_handler.py
++a/handlers/admin_handler.py b/handlers/admin_handler.py
++a/handlers/details_handler.py b/handlers/details_handler.py
++a/handlers/item_inventory_tracker.py b/handlers/item_inventory_tracker.py
++a/handlers/remove_user_handler.py b/handlers/remove_user_handler.py
++a/handlers/report_handler.py b/handlers/report_handler.py
++a/handlers/search_handler.py b/handlers/search_handler.py
++a/handlers/update_details.py b/handlers/update_details.py
++a/handlers/update_inventory.py b/handlers/update_inventory.py
++a/main.py b/main.py
++a/managers/controller_manager.py b/managers/controller_manager.py
++a/managers/distribution_manager.py b/managers/distribution_manager.py
++a/managers/supplier_manager.py b/managers/supplier_manager.py
++a/utils/cli.py b/utils/cli.py
++a/utils/inquirer.py b/utils/dependencies.py
++a/utils/tables.py b/utils/tables.py
++```
++
++
++### Inventory Tracking System Command Structure
++
++1. **Distribute or Receive Supplies**
++    - `Distribute items ` - Distribute an item to a hospital
++    - `Receive supplies` - Receive supplies from a supplier
++
++2. **Update Details**
++      - `Update Supplier Details` - Update supplier details
++      - `Update Hospital Details` - Update hospital details
++
++3. **Item Inventory Tracking**
++      - `Inventory all` - List all available items
++      - `Inventory less than 25` - List items under 25 quantity
++      - `Inventory custom quantity filter` - List items that has a quantity between what the user specified 
++
++4. **Search**
++      - `search item` - Search item and list distributions to hospitals
++      - `search hospital` - Search and view hospital details
++      - `search supplier` - Search and view supplier details
++
++5. **Generate Report**
++    - `report month` - Generate supply and distribution report for a certain month
++
++6. **Admin Controls**
++    - `Remove Controller` - Remove a user
++    - `View Controllers` - View all controllers
++
++8. **View Details**
++    - `view` - View details of suppliers, hospitals, or items
++        - `view inventory` - View details of all inventory
++        - `view supplier` - View details of all suppliers
++        - `view hospital` - View details of all hospitals
++
++9. **Exit**
++    - `exit` - Quit the program
+diff --git a/data/controllers.txt b/data/controllers.txt
+index 147d3e1..54228d6 100644
+--- a/data/controllers.txt
++++ b/data/controllers.txt
+@@ -1 +1 @@
+-{'admin': '\x1b\x1b', 'heh': 'hehe', 'We woo': 'hehe', 'Hehe': 'kek'}
+\ No newline at end of file
++{'admin': b'$2b$12$9GR4Q4Uchz9FSkjskUwZzea8xl39R..X2agX.q3OHCRbzl.zRvtIC', 'test': b'$2b$12$wVUKpJeZ2VZGXB.646ja..AdMI30yH0CVBNF9jaES0ibQNeR7Erpa'}
+\ No newline at end of file
+diff --git a/data/distribution_transactions.txt b/data/distribution_transactions.txt
+index 248af48..a1b8702 100644
+--- a/data/distribution_transactions.txt
++++ b/data/distribution_transactions.txt
+@@ -1 +1 @@
+-[{'item_code': 'HC', 'hospital_code': 'H1', 'quantity': 4, 'date': 1418633537.693726, 'controller': 'heh'}, {'item_code': 'HC', 'hospital_code': 'H3', 'quantity': 4, 'date': 1712633763.818681, 'controller': 'heh'}, {'item_code': 'HC', 'hospital_code': 'H1', 'quantity': 6, 'date': 1718634387.4210072, 'controller': 'heh'}, {'item_code': 'FS', 'hospital_code': 'H1', 'quantity': 4, 'date': 1718634468.716925, 'controller': 'heh'}, {'item_code': 'MS', 'hospital_code': 'H1', 'quantity': 1, 'date': 1318634502.1273532, 'controller': 'heh'}, {'item_code': 'FS', 'hospital_code': 'H1', 'quantity': 1, 'date': 1718634534.3061042, 'controller': 'heh'}, {'item_code': 'FS', 'hospital_code': 'H1', 'quantity': 1, 'date': 1718634848.848087, 'controller': 'heh'}, {'item_code': 'FS', 'hospital_code': 'H4', 'quantity': 80, 'date': 1718643727.112403, 'controller': 'heh'}, {'item_code': 'HC', 'hospital_code': 'H3', 'quantity': 100, 'date': 1718643981.403409, 'controller': 'heh'}, {'item_code': 'FS', 'hospital_code': 'H3', 'quantity': 500, 'date': 1718718161.2358332, 'controller': 'heh'}, {'item_code': 'FS', 'hospital_code': 'H2', 'quantity': 20, 'date': 1718718853.076252, 'controller': 'heh'}, {'item_code': 'HC', 'hospital_code': 'H1', 'quantity': 69, 'date': 1718720362.009349, 'controller': 'heh'}, {'item_code': 'HC', 'hospital_code': 'H2', 'quantity': 10, 'date': 1718720368.074353, 'controller': 'heh'}, {'item_code': 'GL', 'hospital_code': 'H1', 'quantity': 20, 'date': 1718721582.777262, 'controller': 'heh'}, {'item_code': 'GL', 'hospital_code': 'H4', 'quantity': 69, 'date': 1718721595.8944268, 'controller': 'heh'}, {'item_code': 'HC', 'hospital_code': 'H4', 'quantity': 10, 'date': 1718722304.341205, 'controller': 'heh'}, {'item_code': 'FS', 'hospital_code': 'H1', 'quantity': 66, 'date': 1718775009.161859, 'controller': 'heh'}, {'item_code': 'FS', 'hospital_code': 'H2', 'quantity': 23, 'date': 1719192714.468608, 'controller': 'heh'}, {'item_code': 'HC', 'hospital_code': 'H2', 'quantity': 12, 'date': 1719194030.435252, 'controller': 'heh'}, {'item_code': 'HC', 'hospital_code': 'H2', 'quantity': 0, 'date': 1719459337.836826, 'controller': 'heh'}]
+\ No newline at end of file
++[{'item_code': 'HC', 'hospital_code': 'H1', 'quantity': 4, 'date': 1418633537.693726, 'controller': 'heh'}, {'item_code': 'HC', 'hospital_code': 'H3', 'quantity': 4, 'date': 1712633763.818681, 'controller': 'heh'}, {'item_code': 'HC', 'hospital_code': 'H1', 'quantity': 6, 'date': 1718634387.4210072, 'controller': 'heh'}, {'item_code': 'FS', 'hospital_code': 'H1', 'quantity': 4, 'date': 1718634468.716925, 'controller': 'heh'}, {'item_code': 'MS', 'hospital_code': 'H1', 'quantity': 1, 'date': 1318634502.1273532, 'controller': 'heh'}, {'item_code': 'FS', 'hospital_code': 'H1', 'quantity': 1, 'date': 1718634534.3061042, 'controller': 'heh'}, {'item_code': 'FS', 'hospital_code': 'H1', 'quantity': 1, 'date': 1718634848.848087, 'controller': 'heh'}, {'item_code': 'FS', 'hospital_code': 'H4', 'quantity': 80, 'date': 1718643727.112403, 'controller': 'heh'}, {'item_code': 'HC', 'hospital_code': 'H3', 'quantity': 100, 'date': 1718643981.403409, 'controller': 'heh'}, {'item_code': 'FS', 'hospital_code': 'H3', 'quantity': 500, 'date': 1718718161.2358332, 'controller': 'heh'}, {'item_code': 'FS', 'hospital_code': 'H2', 'quantity': 20, 'date': 1718718853.076252, 'controller': 'heh'}, {'item_code': 'HC', 'hospital_code': 'H1', 'quantity': 69, 'date': 1718720362.009349, 'controller': 'heh'}, {'item_code': 'HC', 'hospital_code': 'H2', 'quantity': 10, 'date': 1718720368.074353, 'controller': 'heh'}, {'item_code': 'GL', 'hospital_code': 'H1', 'quantity': 20, 'date': 1718721582.777262, 'controller': 'heh'}, {'item_code': 'GL', 'hospital_code': 'H4', 'quantity': 69, 'date': 1718721595.8944268, 'controller': 'heh'}, {'item_code': 'HC', 'hospital_code': 'H4', 'quantity': 10, 'date': 1718722304.341205, 'controller': 'heh'}, {'item_code': 'FS', 'hospital_code': 'H1', 'quantity': 66, 'date': 1718775009.161859, 'controller': 'heh'}, {'item_code': 'FS', 'hospital_code': 'H2', 'quantity': 23, 'date': 1719192714.468608, 'controller': 'heh'}, {'item_code': 'HC', 'hospital_code': 'H2', 'quantity': 12, 'date': 1719194030.435252, 'controller': 'heh'}, {'item_code': 'HC', 'hospital_code': 'H2', 'quantity': 0, 'date': 1719459337.836826, 'controller': 'heh'}, {'item_code': 'FS', 'hospital_code': 'H2', 'quantity': 10, 'date': 1721226457.673886, 'controller': 'admin'}, {'item_code': 'HC', 'hospital_code': 'H1', 'quantity': 2, 'date': 1721319833.820728, 'controller': 'admin'}]
+\ No newline at end of file
+diff --git a/data/hospitals.txt b/data/hospitals.txt
+index 2d10e21..fb6658d 100644
+--- a/data/hospitals.txt
++++ b/data/hospitals.txt
+@@ -1 +1 @@
+-[{'hospital_code': 'H1', 'hospital_name': 'Sunway Medical Centre', 'hospital_address': 'No. 5 Jalan Lagoon Selatan, Bandar Sunway, 47500 Selangor, Malaysia'}, {'hospital_code': 'H2', 'hospital_name': 'Tung Shin Hospital', 'hospital_address': '102, Jalan Pudu, Bukit Bintang, 55100 Kuala Lumpur, Wilayah Persekutuan Kuala Lumpur'}, {'hospital_code': 'H3', 'hospital_name': 'Hospital Sohai', 'hospital_address': 'Hospital Ampang, Jalan Mewah Utara, Taman Pandan Mewah, 68000 Ampang Jaya, Selangor'}, {'hospital_code': 'H4', 'hospital_name': 'Hospital Kuala Lumpur', 'hospital_address': 'Hospital Kuala Lumpur, 50586 Jalan Pahang, Wilayah Persekutuan Kuala Lumpur'}]
+\ No newline at end of file
++[{'hospital_code': 'H1', 'hospital_name': 'Sunway Medical Centre', 'hospital_address': 'No. 5 Jalan Lagoon Selatan, Bandar Sunway, 47500 Selangor, Malaysia'}, {'hospital_code': 'H2', 'hospital_name': 'Tung Shin Hospital', 'hospital_address': '102, Jalan Pudu, Bukit Bintang, 55100 Kuala Lumpur, Wilayah Persekutuan Kuala Lumpur'}, {'hospital_code': 'H3', 'hospital_name': 'Hospital Not Sohai', 'hospital_address': 'Hospital Ampang, Jalan Mewah Utara, Taman Pandan Mewah, 68000 Ampang Jaya, Selangor'}, {'hospital_code': 'H4', 'hospital_name': 'Hospital Kuala Lumpur', 'hospital_address': 'Hospital Kuala Lumpur, 50586 Jalan Pahang, Wilayah Persekutuan Kuala Lumpur'}]
+\ No newline at end of file
+diff --git a/data/ppe.txt b/data/ppe.txt
+index 562f1e0..242f1f4 100644
+--- a/data/ppe.txt
++++ b/data/ppe.txt
+@@ -1 +1 @@
+-[{'item_code': 'HC', 'item_name': 'Head Cover', 'supplier_code': 'S3', 'quantity': 3}, {'item_code': 'FS', 'item_name': 'Face Shield', 'supplier_code': 'S1', 'quantity': 551}, {'item_code': 'MS', 'item_name': 'Mask', 'supplier_code': 'S1', 'quantity': 140}, {'item_code': 'GL', 'item_name': 'Gloves', 'supplier_code': 'S1', 'quantity': 11}, {'item_code': 'GW', 'item_name': 'Gown', 'supplier_code': 'S1', 'quantity': 100}, {'item_code': 'SC', 'item_name': 'Shoe Covers', 'supplier_code': 'S2', 'quantity': 100}]
+\ No newline at end of file
++[{'item_code': 'HC', 'item_name': 'Head Cover', 'supplier_code': 'S3', 'quantity': 1}, {'item_code': 'FS', 'item_name': 'Face Shield', 'supplier_code': 'S1', 'quantity': 561}, {'item_code': 'MS', 'item_name': 'Mask', 'supplier_code': 'S1', 'quantity': 140}, {'item_code': 'GL', 'item_name': 'Gloves', 'supplier_code': 'S1', 'quantity': 11}, {'item_code': 'GW', 'item_name': 'Gown', 'supplier_code': 'S1', 'quantity': 100}, {'item_code': 'SC', 'item_name': 'Shoe Covers', 'supplier_code': 'S2', 'quantity': 100}]
+\ No newline at end of file
+diff --git a/data/suppliers.txt b/data/suppliers.txt
+index d040a8e..490def3 100644
+--- a/data/suppliers.txt
++++ b/data/suppliers.txt
+@@ -1 +1 @@
+-[{'supplier_code': 'S1', 'supplier_person_name': 'Lim Xuan Boss', 'supplier_company_name': 'MEDICOS', 'supplier_company_address': 'Lot 2729, Jalan Gendang/KS2, Taman Klang Jaya, Klang, 41200, Selangor'}, {'supplier_code': 'S2', 'supplier_person_name': 'Mak', 'supplier_company_name': 'Big Pharmacy', 'supplier_company_address': 'No.59G,61G,Jalan Radin Tengah Bandar Baru, 57000 Kuala Lumpur'}, {'supplier_code': 'S3', 'supplier_person_name': 'Lim', 'supplier_company_name': 'Xuan Health Care', 'supplier_company_address': 'Lot 345, Block I, Lorong Plaza Permai 5, 88400 Kota Kinabalu, Sabah'}, {'supplier_code': 'S4', 'supplier_person_name': 'Ong', 'supplier_company_name': 'Safetyware', 'supplier_company_address': 'No.3836, Jalan Mangga, Taman Tampoi, 38366 Kuala Lumpur'}]
+\ No newline at end of file
++[{'supplier_code': 'S1', 'supplier_person_name': 'Lim Xuan Boss', 'supplier_company_name': 'MEDICOS', 'supplier_company_address': 'Lot 2729, Jalan Gendang/KS2, Taman Klang Jaya, Klang, 41200, Selangor'}, {'supplier_code': 'S2', 'supplier_person_name': 'Mak', 'supplier_company_name': 'Big Pharmacy', 'supplier_company_address': 'No.59G,61G,Jalan Radin Tengah Bandar Baru, 57000 Kuala Lumpur'}, {'supplier_code': 'S3', 'supplier_person_name': 'YESSIR', 'supplier_company_name': 'Real Good Xuan Care', 'supplier_company_address': 'Lot 345, Block I, Lorong Plaza Permai 5, 88400 Kota Kinabalu, Sabah'}, {'supplier_code': 'S4', 'supplier_person_name': 'Ong', 'supplier_company_name': 'Safetyware', 'supplier_company_address': 'No.3836, Jalan Mangga, Taman Tampoi, 38366 Kuala Lumpur'}]
+\ No newline at end of file
+diff --git a/data/supply_transactions.txt b/data/supply_transactions.txt
+index 726a5cb..b1985d0 100644
+--- a/data/supply_transactions.txt
++++ b/data/supply_transactions.txt
+@@ -1 +1 @@
+-[{'item_code': 'MS', 'quantity': 10, 'date': 1718642443.328073, 'controller': 'heh'}, {'item_code': 'MS', 'quantity': 10, 'date': 1718642477.3486762, 'controller': 'heh'}, {'item_code': 'FS', 'quantity': 21, 'date': 1718642538.5101461, 'controller': 'heh'}, {'item_code': 'HC', 'quantity': 200, 'date': 1718642544.555522, 'controller': 'heh'}, {'item_code': 'FS', 'quantity': 1000, 'date': 1718643997.6422122, 'controller': 'heh'}, {'item_code': 'FS', 'quantity': 40, 'date': 1718718206.429439, 'controller': 'heh'}, {'item_code': 'MS', 'quantity': 1, 'date': 1718720353.2444701, 'controller': 'heh'}, {'item_code': 'MS', 'quantity': 20, 'date': 1718778402.119953, 'controller': 'heh'}, {'item_code': 'HC', 'quantity': 3, 'date': 1719475971.41489, 'controller': 'heh'}, {'item_code': 'FS', 'quantity': 100, 'date': 1719478352.251059, 'controller': 'heh'}]
+\ No newline at end of file
++[{'item_code': 'MS', 'quantity': 10, 'date': 1718642443.328073, 'controller': 'heh'}, {'item_code': 'MS', 'quantity': 10, 'date': 1718642477.3486762, 'controller': 'heh'}, {'item_code': 'FS', 'quantity': 21, 'date': 1718642538.5101461, 'controller': 'heh'}, {'item_code': 'HC', 'quantity': 200, 'date': 1718642544.555522, 'controller': 'heh'}, {'item_code': 'FS', 'quantity': 1000, 'date': 1718643997.6422122, 'controller': 'heh'}, {'item_code': 'FS', 'quantity': 40, 'date': 1718718206.429439, 'controller': 'heh'}, {'item_code': 'MS', 'quantity': 1, 'date': 1718720353.2444701, 'controller': 'heh'}, {'item_code': 'MS', 'quantity': 20, 'date': 1718778402.119953, 'controller': 'heh'}, {'item_code': 'HC', 'quantity': 3, 'date': 1719475971.41489, 'controller': 'heh'}, {'item_code': 'FS', 'quantity': 100, 'date': 1719478352.251059, 'controller': 'heh'}, {'item_code': 'FS', 'quantity': 20, 'date': 1721226465.019974, 'controller': 'admin'}]
+\ No newline at end of file
+diff --git a/features.md b/features.md
+deleted file mode 100644
+index e69de29..0000000
+diff --git a/full-diff.diff b/full-diff.diff
+new file mode 100644
+index 0000000..4d67e00
+--- /dev/null
++++ b/full-diff.diff
+@@ -0,0 +1,1409 @@
+++++ b/dependencies.py
++@@ -0,0 +1 @@
+++from utils.dependencies
++diff --git a/features.md b/features.md
++deleted file mode 100644
++index e69de29..0000000
++diff --git a/handlers/action_handler.py b/handlers/action_handler.py
++index 447234a..8326042 100644
++--- a/handlers/action_handler.py
+++++ b/handlers/action_handler.py
++@@ -1,21 +1,27 @@
+++from handlers.admin_handler import admin_handler
+++from handlers.details_handler import details_handler
++ from handlers.exit_handler import exit_handler
++ from handlers.item_inventory_tracker import item_inventory_tracker_handler
++ from handlers.report_handler import report_handler
++ from handlers.search_handler import search_handler
++-from handlers.update_details import update_details_handler
++-from handlers.update_inventory import update_inventory_handler
+++from managers.distribution_manager import distribute_inventory
+++from managers.supplier_manager import receive_supplies
++ from utils.cli import select_from_list
++ 
++ 
++ def action_handler(controller):
+++
++     handlers = {
++-        "Distribute / Receive Supply": update_inventory_handler,
++-        "Update Details": update_details_handler,
+++        "Distribute Inventory": distribute_inventory,
+++        "Receive Supplies": receive_supplies,
+++        "Details (View / Update)": details_handler,
++         "Item Inventory Tracking": item_inventory_tracker_handler,
++-        "Search Item": search_handler,
+++        "Search": search_handler,
++         "Generate Report": report_handler,
++         "Exit": exit_handler,
++     }
+++    if controller == "admin":
+++        handlers["Admin Actions"] = admin_handler
++     action = select_from_list("What action do you want to perform?", handlers.keys())
++ 
++     handlers[action](controller)
++diff --git a/handlers/admin_handler.py b/handlers/admin_handler.py
++new file mode 100644
++index 0000000..64f173e
++--- /dev/null
+++++ b/handlers/admin_handler.py
++@@ -0,0 +1,19 @@
+++from handlers.continue_handler import continue_handler
+++from managers.controller_manager import (print_controllers,
+++                                         print_removed_controllers)
+++from utils.cli import select_from_list
+++
+++controllers_file_path = "data/controllers.txt"
+++
+++
+++def admin_handler(controller):
+++    choices = ["View all controllers", "Remove a controller"]
+++    choice = select_from_list("What action would you like to take", choices)
+++
+++    if choice == choices[0]:
+++        print_controllers()
+++
+++    elif choice == choices[1]:
+++        print_removed_controllers()
+++
+++    continue_handler(controller)
++diff --git a/handlers/details_handler.py b/handlers/details_handler.py
++new file mode 100644
++index 0000000..9601224
++--- /dev/null
+++++ b/handlers/details_handler.py
++@@ -0,0 +1,256 @@
+++from tabulate import tabulate
+++
+++from handlers.continue_handler import continue_handler
+++from managers.hospital_manager import (
+++    retrieve_hospital,
+++    retrieve_hospital_codes,
+++    update_hospital_data,
+++)
+++from managers.supplier_manager import (
+++    get_supplier_info,
+++    retrieve_supplier_codes,
+++    update_supplier_data,
+++)
+++from utils.cli import clear_screen, select_from_list
+++from utils.text_manipulation import convert_to_snake_case, get_between_parantheses
+++from utils.textfiles_database import load_data
+++
+++
+++def details_handler(controller):
+++    options = ["Update Details", "View Details"]
+++    option = select_from_list("What action do you wish to perform?", options)
+++    if option == options[0]:
+++        update_details_handler()
+++    else:
+++        view_details_handler()
+++    continue_handler(controller)
+++
+++
+++def update_details_handler():
+++    category_choices = ["Supplier", "Hospitals"]
+++    category_selection = select_from_list(
+++        "Which category are you looking to update?", category_choices
+++    )
+++
+++    if category_selection == category_choices[0]:
+++        supplier_codes = retrieve_supplier_codes()
+++        hospital_choices = list(
+++            map(
+++                lambda x: get_supplier_info(x)["supplier_company_name"] + f" ({x})",
+++                supplier_codes,
+++            )
+++        )
+++
+++        unparsed_hospital_selection = select_from_list(
+++            "Which supplier do you want to edit?", hospital_choices
+++        )
+++        hospital_selection = get_between_parantheses(unparsed_hospital_selection)[0]
+++        hospital = get_supplier_info(hospital_selection)
+++
+++        attribute_choices = [
+++            "Supplier Person Name",
+++            "Supplier Company Name",
+++            "Supplier Company Address",
+++        ]
+++        unparsed_attribute_selection = select_from_list(
+++            "Which attribute do you want to edit?", attribute_choices
+++        )
+++        attribute_selection = convert_to_snake_case(unparsed_attribute_selection)
+++        value_input = input(
+++            f"What do you want to change the {unparsed_attribute_selection} to >> "
+++        )
+++
+++        hospital[attribute_selection] = value_input
+++        update_supplier_data(hospital_selection, hospital)
+++        clear_screen()
+++
+++        print(
+++            f"[Supplier Handler]: Updated {hospital_selection}'s {unparsed_attribute_selection} to {value_input}"
+++        )
+++    elif category_selection == category_choices[1]:
+++        hospital_codes = retrieve_hospital_codes()
+++        hospital_choices = list(
+++            map(
+++                lambda x: retrieve_hospital(x)["hospital_name"] + f" ({x})",
+++                hospital_codes,
+++            )
+++        )
+++
+++        unparsed_hospital_selection = select_from_list(
+++            "Which supplier do you want to edit?", hospital_choices
+++        )
+++        hospital_selection = get_between_parantheses(unparsed_hospital_selection)[0]
+++        hospital = retrieve_hospital(hospital_selection)
+++
+++        attribute_choices = [
+++            "Hospital Name",
+++            "Hospital Address",
+++        ]
+++        unparsed_attribute_selection = select_from_list(
+++            "Which attribute do you want to edit?", attribute_choices
+++        )
+++        attribute_selection = convert_to_snake_case(unparsed_attribute_selection)
+++        value_input = input(
+++            f"What do you want to change the {unparsed_attribute_selection} to >> "
+++        )
+++
+++        hospital[attribute_selection] = value_input
+++        update_hospital_data(hospital_selection, hospital)
+++        clear_screen()
+++
+++        print(
+++            f"[Hospital Handler]: Updated {hospital_selection}'s {unparsed_attribute_selection} to {value_input}"
+++        )
+++
+++
+++def update_details_handler():
+++    category_choices = ["Supplier", "Hospitals"]
+++    category_selection = select_from_list(
+++        "Which category are you looking to update?", category_choices
+++    )
+++
+++    if category_selection == category_choices[0]:
+++        supplier_codes = retrieve_supplier_codes()
+++        hospital_choices = list(
+++            map(
+++                lambda x: get_supplier_info(x)["supplier_company_name"] + f" ({x})",
+++                supplier_codes,
+++            )
+++        )
+++
+++        unparsed_hospital_selection = select_from_list(
+++            "Which supplier do you want to edit?", hospital_choices
+++        )
+++        hospital_selection = get_between_parantheses(unparsed_hospital_selection)[0]
+++        hospital = get_supplier_info(hospital_selection)
+++
+++        attribute_choices = [
+++            "Supplier Person Name",
+++            "Supplier Company Name",
+++            "Supplier Company Address",
+++        ]
+++        unparsed_attribute_selection = select_from_list(
+++            "Which attribute do you want to edit?", attribute_choices
+++        )
+++        attribute_selection = convert_to_snake_case(unparsed_attribute_selection)
+++        value_input = input(
+++            f"What do you want to change the {unparsed_attribute_selection} to >> "
+++        )
+++
+++        hospital[attribute_selection] = value_input
+++        update_supplier_data(hospital_selection, hospital)
+++        clear_screen()
+++
+++        print(
+++            f"[Supplier Handler]: Updated {hospital_selection}'s {unparsed_attribute_selection} to {value_input}"
+++        )
+++    elif category_selection == category_choices[1]:
+++        hospital_codes = retrieve_hospital_codes()
+++        hospital_choices = list(
+++            map(
+++                lambda x: retrieve_hospital(x)["hospital_name"] + f" ({x})",
+++                hospital_codes,
+++            )
+++        )
+++
+++        unparsed_hospital_selection = select_from_list(
+++            "Which supplier do you want to edit?", hospital_choices
+++        )
+++        hospital_selection = get_between_parantheses(unparsed_hospital_selection)[0]
+++        hospital = retrieve_hospital(hospital_selection)
+++
+++        attribute_choices = [
+++            "Hospital Name",
+++            "Hospital Address",
+++        ]
+++        unparsed_attribute_selection = select_from_list(
+++            "Which attribute do you want to edit?", attribute_choices
+++        )
+++        attribute_selection = convert_to_snake_case(unparsed_attribute_selection)
+++        value_input = input(
+++            f"What do you want to change the {unparsed_attribute_selection} to >> "
+++        )
+++
+++        hospital[attribute_selection] = value_input
+++        update_hospital_data(hospital_selection, hospital)
+++        clear_screen()
+++
+++        print(
+++            f"[Hospital Handler]: Updated {hospital_selection}'s {unparsed_attribute_selection} to {value_input}"
+++        )
+++
+++
+++def view_details_handler():
+++    options = ["Items", "Hospitals", "Suppliers"]
+++    selection = select_from_list("Which category do you want to view?", options)
+++    heading = f"[Details Handler]: Details on {selection}"
+++    headers = []
+++    filepath = "data/"
+++
+++    if selection == options[0]:
+++        headers.extend(["Item Code", "Item Name", "Supplier Code", "Quantity"])
+++        filepath += "ppe.txt"
+++    elif selection == options[1]:
+++        headers.extend(["Hospital Code", "Hospital Name", "Hospital Address"])
+++        filepath += "hospitals.txt"
+++    elif selection == options[2]:
+++        headers.extend(
+++            [
+++                "Supplier Code",
+++                "Supplier Person Name",
+++                "Supplier Company Name",
+++                "Supplier Address",
+++            ]
+++        )
+++        filepath += "suppliers.txt"
+++
+++    raw_data = load_data(filepath)
+++    data = list(entry.values() for entry in raw_data)
+++    clear_screen()
+++    print(heading)
+++    print(
+++        tabulate(
+++            data,
+++            headers=headers,
+++            tablefmt="simple_grid",
+++            showindex=range(1, len(data) + 1),
+++        )
+++    )
+++
+++
+++def view_details_handler():
+++    options = ["Items", "Hospitals", "Suppliers"]
+++    selection = select_from_list("Which category do you want to view?", options)
+++    heading = f"[Details Handler]: Details on {selection}"
+++    headers = []
+++    filepath = "data/"
+++
+++    if selection == options[0]:
+++        headers.extend(["Item Code", "Item Name", "Supplier Code", "Quantity"])
+++        filepath += "ppe.txt"
+++    elif selection == options[1]:
+++        headers.extend(["Hospital Code", "Hospital Name", "Hospital Address"])
+++        filepath += "hospitals.txt"
+++    elif selection == options[2]:
+++        headers.extend(
+++            [
+++                "Supplier Code",
+++                "Supplier Person Name",
+++                "Supplier Company Name",
+++                "Supplier Address",
+++            ]
+++        )
+++        filepath += "suppliers.txt"
+++
+++    raw_data = load_data(filepath)
+++    data = list(entry.values() for entry in raw_data)
+++    clear_screen()
+++    print(heading)
+++    print(
+++        tabulate(
+++            data,
+++            headers=headers,
+++            tablefmt="simple_grid",
+++            showindex=range(1, len(data) + 1),
+++        )
+++    )
++
++diff --git a/handlers/item_inventory_tracker.py b/handlers/item_inventory_tracker.py
++index 755b44d..55cd85e 100644
++--- a/handlers/item_inventory_tracker.py
+++++ b/handlers/item_inventory_tracker.py
++@@ -1,10 +1,17 @@
+++from tabulate import tabulate
+++
++ from managers.inventory_manager import retrieve_inventory
+++from managers.supplier_manager import get_supplier_info
++ from utils.cli import clear_screen, select_from_list
++ 
++ 
++ def item_inventory_tracker_handler(controller):
++     clear_screen()
++-    action_selection = ["Quantity of All Items", "Items that has lesser than 25 boxes"]
+++    action_selection = [
+++        "Quantity of All Items",
+++        "Items that has lesser than 25 boxes",
+++        "Items that fall between a certain range",
+++    ]
++     action = select_from_list(
++         "[Inventory Manager]: Which action do you wish to perform?", action_selection
++     )
++@@ -14,10 +21,8 @@ def item_inventory_tracker_handler(controller):
++     if action == action_selection[0]:
++         inventory.sort(key=lambda x: x["quantity"])
++         print("[Inventory Manager]: List of items with quantity in ascending order: \n")
++-        for entry in inventory:
++-            print(
++-                f"{entry['item_name']} ({entry['item_code']}) - {entry['quantity']} boxes"
++-            )
+++        # item code, item name, item quantity, supplier
+++        display_items(inventory)
++     elif action == action_selection[1]:
++         res = filter(lambda x: x["quantity"] < 25, inventory)
++         filtered_list = list(res)
++@@ -27,11 +32,56 @@ def item_inventory_tracker_handler(controller):
++             print(
++                 "[Inventory Manager]: List of items with quantity is lesser than 25 boxes: \n"
++             )
++-            for entry in filtered_list:
++-                print(
++-                    f"{entry['item_name']} ({entry['item_code']}) - {entry['quantity']} boxes"
++-                )
+++            display_items(filtered_list)
+++    else:
+++        display_items_between_range(inventory)
++ 
++     from handlers.continue_handler import continue_handler
++ 
++     continue_handler(controller)
+++
+++
+++def get_valid_input(prompt):
+++    while True:
+++        value = input(prompt)
+++        if value.isdigit():
+++            return int(value)
+++        else:
+++            print("That is not a valid number")
+++
+++
+++def display_items_between_range(inventory):
+++    starting_range = get_valid_input("What is the starting range: ")
+++    ending_range = get_valid_input("What is the ending range: ")
+++    filtered_list = list(
+++        filter(lambda x: starting_range <= x["quantity"] <= ending_range, inventory)
+++    )
+++    if len(filtered_list) == 0:
+++        print(
+++            f"[Inventory Manager]: There are no items that fit in the range of ({starting_range} - {ending_range})"
+++        )
+++    else:
+++        display_items(filtered_list)
+++
+++
+++def display_items(data):
+++    output_table = []
+++    for entry in data:
+++        supplier = get_supplier_info(entry["supplier_code"])
+++        output_table.extend(
+++            [
+++                [
+++                    entry["item_code"],
+++                    entry["item_name"],
+++                    str(entry["quantity"]),
+++                    f"{supplier['supplier_company_name']} ({supplier['supplier_code']})",
+++                ]
+++            ]
+++        )
+++    print(
+++        tabulate(
+++            output_table,
+++            headers=["Item Code", "Item Name", "Quantity in boxes", "Supplier"],
+++            tablefmt="simple_grid",
+++        )
+++    )
++diff --git a/handlers/remove_user_handler.py b/handlers/remove_user_handler.py
++new file mode 100644
++index 0000000..81801a2
++--- /dev/null
+++++ b/handlers/remove_user_handler.py
++@@ -0,0 +1,28 @@
+++from handlers.continue_handler import continue_handler
+++from utils.cli import clear_screen, select_from_list
+++from utils.textfiles_database import load_data, save_value
+++
+++controllers_data_filepath = "data/controllers.txt"
+++
+++
+++def remove_user_handler(controller):
+++    controllers = load_data(controllers_data_filepath)
+++    exclude_admin = list(controllers.keys())
+++    exclude_admin.remove("admin")
+++    if len(exclude_admin) == 0:
+++        print("There are no controllers to remove.")
+++    else:
+++        controller_to_remove = select_from_list(
+++            "Which controller do you want to remove", exclude_admin
+++        )
+++        confirmation = select_from_list(
+++            f'Are you sure you want to remove controller "{controller_to_remove}"',
+++            ["Yes", "No"],
+++        )
+++        if confirmation == "Yes":
+++            controllers.pop(controller_to_remove)
+++            save_value(controllers, controllers_data_filepath)
+++            clear_screen()
+++            print(f'Removed controller "{controller_to_remove}" successfully!')
+++
+++    continue_handler(controller)
++diff --git a/handlers/report_handler.py b/handlers/report_handler.py
++index 8920a78..b44ca2d 100644
++--- a/handlers/report_handler.py
+++++ b/handlers/report_handler.py
++@@ -1,11 +1,16 @@
+++from tabulate import tabulate
+++
++ from handlers.continue_handler import continue_handler
++ from managers.distribution_manager import retrieve_distribution_data
++ from managers.hospital_manager import retrieve_hospital
++ from managers.inventory_manager import retrieve_inventory, retrieve_item
++-from managers.supplier_manager import (get_supplier_info,
++-                                       retreive_supply_transactions_data)
+++from managers.supplier_manager import (
+++    get_supplier_info,
+++    retreive_supply_transactions_data,
+++)
++ from utils.cli import clear_screen, select_from_list
++ from utils.misc import timestamp_to_monthyear, timestamp_tostring
+++from utils.tables import create_table_extend, tabularize
++ 
++ 
++ def report_handler(controller):
++@@ -118,45 +123,91 @@ def distributions_and_supplies_month():
++     )
++     clear_screen()
++ 
++-    print(f"[Report Handler]: Distributions for {month_year_selection}\n")
+++    print(
+++        f"[Report Handler]: Distributions & Supplies Report for {month_year_selection}\n"
+++    )
++     map_value = date_data_map[month_year_selection]
+++    if "distribution_transactions" in map_value:
+++        distribution_data = map_value["distribution_transactions"]
+++        # Hospital, total distributions, item(s)
+++        distribution_table = []
+++        total_distributions = 0
++ 
++-    # Print distributions
++-    print("(Distributions)")
++-    if "distribution_transactions" not in map_value:
++-        print("   No distributions!")
++-    else:
++-        distribution_transactions = map_value["distribution_transactions"]
++-        for index, hospital_code in enumerate(distribution_transactions):
+++        # Loop over every single hospital in data
+++        for entry in distribution_data:
+++            hospital_code = entry
++             hospital = retrieve_hospital(hospital_code)
++-            print(
++-                f"{index + 1}. {hospital['hospital_name']}\n   Address: {hospital['hospital_address']}"
++-            )
++-            print(
++-                f'   Total distributions: {distribution_transactions[hospital_code]["total_quantity"]} boxes'
++-            )
++-            for item_code in distribution_transactions[hospital_code]["items"]:
+++            entry_value = distribution_data[hospital_code]
+++            total_distributions = entry_value["total_quantity"]
+++            items = entry_value["items"]
+++            hospital_table = [
+++                f"{hospital['hospital_name']} ({hospital_code})",
+++                f"{total_distributions} boxes",
+++            ]
+++            items_distributed = []
+++            for item_code in items:
++                 item = retrieve_item(item_code)
++-                print(
++-                    f'     - {item["item_name"]} ({item_code}): {distribution_transactions[hospital_code]["items"][item_code]} boxes'
+++                items_distributed.append(
+++                    f"{item['item_name']} ({item_code}) - {items[item_code]} boxes"
++                 )
++-            print("\n")
++-
++-    print("(Supply Received)")
++-    if "supply_transactions" not in map_value:
++-        print("   No supply received!")
++-    else:
++-        supply_transactions = map_value["supply_transactions"]
+++                total_distributions += items[item_code]
+++            hospital_table.append("\n".join(items_distributed))
+++            distribution_table.append(hospital_table)
+++        print(f"Total distributions: {total_distributions} boxes")
++         print(
++-            f"Total supply boxes received: {map_value['supply_transactions']['total_quantity']} boxes"
+++            tabulate(
+++                distribution_table,
+++                headers=["Hospital", "Total distributed", "Item(s) distributed"],
+++                tablefmt="simple_grid",
+++            )
++         )
++-        for index, item_code in enumerate(supply_transactions["items"]):
+++
+++    else:
+++        print("No distribution transactions found.")
+++
+++    print("\n")
+++
+++    # Print supply transactions
+++    if "supply_transactions" in map_value:
+++        supply_data = map_value["supply_transactions"]
+++        total_quantity = supply_data["total_quantity"]
+++        items = supply_data["items"]
+++        print(f"Supply received: {total_quantity} boxes")
+++        # Item Code, Item Name, Item Quantity, Supplied by
+++        supply_table = []
+++        item_code_table = []
+++        item_name_table = []
+++        item_quantity_table = []
+++        supplied_by_table = []
+++        for item_code in items:
++             item = retrieve_item(item_code)
++-            print(
++-                f'   {index + 1}. {item["item_name"]} {supply_transactions["items"][item_code]} boxes'
++-            )
++             supplier = get_supplier_info(item["supplier_code"])
++-            print(f'      Supplier: {supplier["supplier_company_name"]}')
+++            item_code_table.append(item_code)
+++            item_name_table.append(item["item_name"])
+++            item_quantity_table.append(f"{ items[item_code] } boxes")
+++            supplied_by_table.append(
+++                f"{supplier['supplier_company_name']} ({supplier['supplier_code']})"
+++            )
+++        supply_table.extend(
+++            [
+++                [
+++                    "\n".join(item_code_table),
+++                    "\n".join(item_name_table),
+++                    "\n".join(item_quantity_table),
+++                    "\n".join(supplied_by_table),
+++                ],
+++            ]
+++        )
+++        print(
+++            tabulate(
+++                supply_table,
+++                headers=["Item Code", "Item Name", "Quantity Received", "Supplied by"],
+++                tablefmt="simple_grid",
+++            )
+++        )
+++
+++    else:
+++        print("No supply transactions found.")
++ 
++ 
++ def suppliers_and_equipments():
++@@ -175,22 +226,34 @@ def suppliers_and_equipments():
++ 
++     clear_screen()
++     print("[Report Handler]: Supplier along with their equipments supplied\n")
+++    output_table = []
++     for supplier_code in supplier_items_map:
++         supplier = get_supplier_info(supplier_code)
++-        print(
++-            f'[Supplier Code: {supplier["supplier_code"]}] {supplier["supplier_company_name"]} ({supplier["supplier_person_name"]})'
+++        to_append = [supplier_code, supplier["supplier_company_name"]]
+++        item_list = supplier_items_map[supplier_code]
+++        to_append.extend(
+++            create_table_extend(item_list, ["item_code", "item_name", "quantity"])
++         )
++-
++-        for index, item in enumerate(supplier_items_map[supplier_code]):
++-            print(f"\t{index + 1}) {item['item_name']} (Code: {item['item_code']})")
++-        print("\n")
+++        output_table.append(to_append)
+++    print(
+++        tabularize(
+++            output_table,
+++            headers=[
+++                "Supplier Code",
+++                "Supplier Name",
+++                "Item Code",
+++                "Item Name",
+++                "Current Quantity (Boxes)",
+++            ],
+++        )
+++    )
++ 
++ 
++ def hospitals_and_distributions():
++     # Get all distributions
++     distribution_data = retrieve_distribution_data()
++     view_transaction_report_input = select_from_list(
++-        "Do you want to view every single transaction log aswell?",
+++        "Would you wish to see every single transaction recorded?",
++         ["Yes", "No (Show the summarised report)"],
++     )
++     view_transaction_report = view_transaction_report_input == "Yes"
++@@ -207,20 +270,22 @@ def hospitals_and_distributions():
++     hospital_distribution_map = {}
++     for entry in distribution_data:
++         # {'item_code': 'HC', 'hospital_code': 'H1', 'quantity': 4, 'date': 1718633537.693726, 'controller': 'heh'}
++-        key = entry["hospital_code"]
+++        hospital_code = entry["hospital_code"]
+++        item = retrieve_item(entry["item_code"])
++         map_value = {
++-            "item": retrieve_item(entry["item_code"]),
+++            "item": item,
+++            "supplier_data": get_supplier_info(item["supplier_code"]),
++             "quantity": entry["quantity"],
++             "date": timestamp_tostring(entry["date"]),
++             "controller": entry["controller"],
++         }
++-        if key in hospital_distribution_map:
++-            hospital_distribution_map[key]["total_quantity_distributed"] += entry[
++-                "quantity"
++-            ]
++-            hospital_distribution_map[key]["transactions"].append(map_value)
+++        if hospital_code in hospital_distribution_map:
+++            hospital_distribution_map[hospital_code][
+++                "total_quantity_distributed"
+++            ] += entry["quantity"]
+++            hospital_distribution_map[hospital_code]["transactions"].append(map_value)
++         else:
++-            hospital_distribution_map[key] = {
+++            hospital_distribution_map[hospital_code] = {
++                 "total_quantity_distributed": entry["quantity"],
++                 "transactions": [map_value],
++             }
++@@ -229,19 +294,49 @@ def hospitals_and_distributions():
++     print(
++         "[Report Handler]: Hospital along with the items that was distributed to them\n"
++     )
++-    for key in hospital_distribution_map:
++-        hospital = retrieve_hospital(key)
++-        print(
++-            f'[Hospital Code: {hospital["hospital_code"]}] {hospital["hospital_name"]} @ ({hospital["hospital_address"]})'
++-        )
++-        print(
++-            f"Total quantity of boxes supplied: {hospital_distribution_map[key]['total_quantity_distributed']}"
++-        )
+++    for idx, hospital_code in enumerate(hospital_distribution_map):
+++        hospital = retrieve_hospital(hospital_code)
+++        hospital_output = [
+++            f"{idx + 1}. {hospital['hospital_name']}",
+++            f"   Total distributions: {hospital_distribution_map[hospital_code]['total_quantity_distributed']} boxes",
+++            f"   Hospital Code: { hospital['hospital_code'] }",
+++            f'   Hospital Address:{hospital["hospital_address"] }',
+++            "",
+++        ]
+++        print("\n".join(hospital_output))
++ 
++         if view_transaction_report:
++             print("Transactions:")
++-            for transaction in hospital_distribution_map[key]["transactions"]:
++-                print(
++-                    f"\t[{transaction['date']}] ({transaction['quantity']} boxes) {transaction['item']['item_name']} (Code: {transaction['item']['item_code']}) - (Controller: {transaction['controller']})"
+++            transaction_table = []
+++            transactions = hospital_distribution_map[hospital_code]["transactions"]
+++            transaction_table.append(
+++                create_table_extend(
+++                    transactions,
+++                    [
+++                        "date",
+++                        "item.item_code",
+++                        "item.item_name",
+++                        "supplier_data.supplier_code",
+++                        "supplier_data.supplier_company_name",
+++                        "quantity",
+++                        "controller",
+++                    ],
++                 )
+++            )
+++            print(
+++                tabularize(
+++                    transaction_table,
+++                    [
+++                        "Date & Time",
+++                        "Item Code",
+++                        "Item Name",
+++                        "Supplier Code",
+++                        "Company Name",
+++                        "Quantity Distributed",
+++                        "Controller",
+++                    ],
+++                    numbering=False,
+++                )
+++            )
+++
++         print("\n")
++diff --git a/handlers/search_handler.py b/handlers/search_handler.py
++index 8500356..541b301 100644
++--- a/handlers/search_handler.py
+++++ b/handlers/search_handler.py
++@@ -1,10 +1,82 @@
++-from utils.misc import prompt_for_items
++-from managers.distribution_manager import print_distributions
+++from tabulate import tabulate
+++
++ from handlers.continue_handler import continue_handler
+++from managers.distribution_manager import print_distributions
+++from managers.hospital_manager import retrieve_hospital_data
+++from managers.supplier_manager import retrieve_supplier_data
+++from utils.cli import clear_screen, select_from_list
+++from utils.misc import prompt_for_items
+++from utils.text_manipulation import get_between_parantheses
++ 
++ 
++ def search_handler(controller):
+++    options = ["Item", "Hospital", "Supplier"]
+++    selection = select_from_list("Which category do you want to search?", options)
+++    if selection == options[0]:
+++        search_item()
+++    elif selection == options[1]:
+++        search_hospital()
+++    elif selection == options[2]:
+++        search_supplier()
+++
+++    continue_handler(controller)
+++
+++
+++def search_item():
++     item = prompt_for_items("Which item are you searching for?")
++     print_distributions(item["item_code"])
++ 
++-    continue_handler(controller)
+++
+++def search_hospital():
+++    hospital_data = retrieve_hospital_data()
+++    hospital_options = list(
+++        f"{hospital['hospital_name']} ({hospital['hospital_code']})"
+++        for hospital in hospital_data
+++    )
+++    hospital_selection = select_from_list(
+++        "Which hospital do you want to search?", hospital_options
+++    )
+++    hospital_code = get_between_parantheses(hospital_selection)[0]
+++    hospital = list(
+++        filter(lambda x: x["hospital_code"] == hospital_code, hospital_data)
+++    )[0]
+++    hospital_values = [hospital.values()]
+++    clear_screen()
+++    print(f"[Search Handler]: Hospital details for {hospital_selection}")
+++    print(
+++        tabulate(
+++            hospital_values,
+++            headers=["Hospital Code", "Hospital Name", "Hospital Address"],
+++            tablefmt="simple_grid",
+++        )
+++    )
+++
+++
+++def search_supplier():
+++    supplier_data = retrieve_supplier_data()
+++    supplier_options = list(
+++        f"{supplier['supplier_company_name']} ({supplier['supplier_code']})"
+++        for supplier in supplier_data
+++    )
+++    supplier_selection = select_from_list(
+++        "Which supplier do you want to search?", supplier_options
+++    )
+++    supplier_code = get_between_parantheses(supplier_selection)[0]
+++    supplier = list(
+++        filter(lambda x: x["supplier_code"] == supplier_code, supplier_data)
+++    )[0]
+++    supplier_values = [supplier.values()]
+++    clear_screen()
+++    print(f"[Search Handler]: Supplier details for {supplier_selection}")
+++    print(
+++        tabulate(
+++            supplier_values,
+++            headers=[
+++                "Supplier Code",
+++                "Supplier Person Name",
+++                "Supplier Company Name",
+++                "Supplier Address",
+++            ],
+++            tablefmt="simple_grid",
+++        )
+++    )
++diff --git a/handlers/update_details.py b/handlers/update_details.py
++deleted file mode 100644
++index 78acbc3..0000000
++--- a/handlers/update_details.py
+++++ /dev/null
++@@ -1,92 +0,0 @@
++-from utils.cli import select_from_list, clear_screen
++-from utils.text_manipulation import convert_to_snake_case, get_between_parantheses
++-from managers.supplier_manager import (
++-    retrieve_supplier_codes,
++-    get_supplier_info,
++-    update_supplier_data,
++-)
++-from managers.hospital_manager import (
++-    retrieve_hospital_codes,
++-    update_hospital_data,
++-    retrieve_hospital,
++-)
++-from handlers.continue_handler import continue_handler
++-
++-
++-def update_details_handler(controller):
++-    category_choices = ["Supplier", "Hospitals"]
++-    category_selection = select_from_list(
++-        "Which category are you looking to update?", category_choices
++-    )
++-
++-    if category_selection == category_choices[0]:
++-        supplier_codes = retrieve_supplier_codes()
++-        hospital_choices = list(
++-            map(
++-                lambda x: get_supplier_info(x)["supplier_company_name"] + f" ({x})",
++-                supplier_codes,
++-            )
++-        )
++-
++-        unparsed_hospital_selection = select_from_list(
++-            "Which supplier do you want to edit?", hospital_choices
++-        )
++-        hospital_selection = get_between_parantheses(unparsed_hospital_selection)[0]
++-        hospital = get_supplier_info(hospital_selection)
++-
++-        attribute_choices = [
++-            "Supplier Person Name",
++-            "Supplier Company Name",
++-            "Supplier Company Address",
++-        ]
++-        unparsed_attribute_selection = select_from_list(
++-            "Which attribute do you want to edit?", attribute_choices
++-        )
++-        attribute_selection = convert_to_snake_case(unparsed_attribute_selection)
++-        value_input = input(
++-            f"What do you want to change the {unparsed_attribute_selection} to >> "
++-        )
++-
++-        hospital[attribute_selection] = value_input
++-        update_supplier_data(hospital_selection, hospital)
++-        clear_screen()
++-
++-        print(
++-            f"[Supplier Handler]: Updated {hospital_selection}'s {unparsed_attribute_selection} to {value_input}"
++-        )
++-    elif category_selection == category_choices[1]:
++-        hospital_codes = retrieve_hospital_codes()
++-        hospital_choices = list(
++-            map(
++-                lambda x: retrieve_hospital(x)["hospital_name"] + f" ({x})",
++-                hospital_codes,
++-            )
++-        )
++-
++-        unparsed_hospital_selection = select_from_list(
++-            "Which supplier do you want to edit?", hospital_choices
++-        )
++-        hospital_selection = get_between_parantheses(unparsed_hospital_selection)[0]
++-        hospital = retrieve_hospital(hospital_selection)
++-
++-        attribute_choices = [
++-            "Hospital Name",
++-            "Hospital Address",
++-        ]
++-        unparsed_attribute_selection = select_from_list(
++-            "Which attribute do you want to edit?", attribute_choices
++-        )
++-        attribute_selection = convert_to_snake_case(unparsed_attribute_selection)
++-        value_input = input(
++-            f"What do you want to change the {unparsed_attribute_selection} to >> "
++-        )
++-
++-        hospital[attribute_selection] = value_input
++-        update_hospital_data(hospital_selection, hospital)
++-        clear_screen()
++-
++-        print(
++-            f"[Hospital Handler]: Updated {hospital_selection}'s {unparsed_attribute_selection} to {value_input}"
++-        )
++-
++-    continue_handler(controller)
++diff --git a/handlers/update_inventory.py b/handlers/update_inventory.py
++index d37de50..1c9fa28 100644
++--- a/handlers/update_inventory.py
+++++ b/handlers/update_inventory.py
++@@ -6,65 +6,55 @@ from utils.misc import prompt_for_items
++ from utils.text_manipulation import get_between_parantheses
++ 
++ 
++-# Distribute / Receive Supplies
++-def update_inventory_handler(controller):
+++def distribute_inventory(controller):
++     clear_screen()
++-    action = select_from_list(
++-        "What do you want to perform?", ["Distribute Items", "Receive Supply"]
++-    )
++     item = prompt_for_items("Which item are you performing it on?")
++-
++-    if action == "Distribute Items":
++-        quantity: int = 0
++-        while True:
++-            quantity = input("How much boxes are being distributed (numbers only) >> ")
++-            if not quantity.isdigit():
++-                print("That is not a valid number")
++-                continue
++-            quantity = int(quantity)
++-            # Check if its distributing  that the currently avaiable
++-            if quantity > item["quantity"]:
++-                print(f"We only have {item['quantity']} boxes of {item['item_name']}")
++-                continue
++-            break
++-
++-        hospitals_data = retrieve_hospital_data()
++-        hospital_selection = []
++-        for entry in hospitals_data:
++-            hospital_selection.append(
++-                f"{entry['hospital_name']} ({entry['hospital_code']})"
++-            )
++-
++-        unparsed_hospital_code = select_from_list(
++-            "Which hospital do you want to distribute to?", hospital_selection
++-        )
++-        hospital_code = get_between_parantheses(unparsed_hospital_code)[0]
++-        hospital = retrieve_hospital(hospital_code)
++-
++-        res = distribute_inventory(
++-            item["item_code"], hospital_code, quantity, controller
+++    quantity: int = 0
+++    while True:
+++        quantity = input("How much boxes are being distributed (numbers only) >> ")
+++        if not quantity.isdigit():
+++            print("That is not a valid number")
+++            continue
+++        quantity = int(quantity)
+++        # Check if its distributing  that the currently avaiable
+++        if quantity > item["quantity"]:
+++            print(f"We only have {item['quantity']} boxes of {item['item_name']}")
+++            continue
+++        break
+++
+++    hospitals_data = retrieve_hospital_data()
+++    hospital_selection = []
+++    for entry in hospitals_data:
+++        hospital_selection.append(
+++            f"{entry['hospital_name']} ({entry['hospital_code']})"
++         )
++-        if res:
++-            clear_screen()
++-            print(
++-                f"[Inventory Manager]: Distributed {quantity} boxes of {item['item_name']} to {hospital['hospital_name']}"
++-            )
++ 
++-    elif action == "Receive Supply":
++-        quantity: int = 0
++-        while True:
++-            quantity = input("How much boxes are being supplied (numbers only) >> ")
++-            if quantity.isdigit():
++-                quantity = int(quantity)
++-                break
++-            else:
++-                print("That is not a valid number")
+++    unparsed_hospital_code = select_from_list(
+++        "Which hospital do you want to distribute to?", hospital_selection
+++    )
+++    hospital_code = get_between_parantheses(unparsed_hospital_code)[0]
+++    hospital = retrieve_hospital(hospital_code)
++ 
++-        receive_supplies(item["item_code"], quantity, controller)
+++    res = distribute_inventory(item["item_code"], hospital_code, quantity, controller)
+++    if res:
++         clear_screen()
++         print(
++-            f"[Inventory Manager]: Received {quantity} boxes of {item['item_name']}, now we have {item['quantity'] + quantity} boxes!"
+++            f"[Inventory Manager]: Distributed {quantity} boxes of {item['item_name']} to {hospital['hospital_name']}"
++         )
++-    from handlers.continue_handler import continue_handler
++ 
++-    continue_handler(controller)
+++
+++def receive_supplies(controller):
+++    clear_screen()
+++    item = prompt_for_items("Which item are you performing it on?")
+++    quantity: int = 0
+++    while True:
+++        quantity = input("How much boxes are being received (numbers only) >> ")
+++        if not quantity.isdigit():
+++            print("That is not a valid number")
+++            continue
+++        quantity = int(quantity)
+++        break
+++    res = receive_supplies(item["item_code"], quantity, controller)
+++    if res:
+++        clear_screen()
+++        print(f"[Inventory Manager]: Received {quantity} boxes of {item['item_name']}")
++diff --git a/main.py b/main.py
++index d10a5ef..65f8eed 100644
++--- a/main.py
+++++ b/main.py
++@@ -1,6 +1,9 @@
+++from tabulate import tabulate
+++
++ from handlers.action_handler import action_handler
++ from managers.controller_manager import controller_manager
++ from utils.cli import clear_screen
+++from utils.dependencies import import_or_install
++ 
++ 
++ def controller_login() -> str | None:
++@@ -15,6 +18,7 @@ def controller_login() -> str | None:
++ 
++ # Login System
++ def main():
+++    import_or_install("tabulate")
++     clear_screen()
++     controller = controller_login()
++     if controller is None:
++diff --git a/managers/controller_manager.py b/managers/controller_manager.py
++index ebf0d67..e8957e4 100644
++--- a/managers/controller_manager.py
+++++ b/managers/controller_manager.py
++@@ -1,45 +1,60 @@
+++from getpass import getpass
+++
++ from utils.cli import clear_screen, select_from_list
+++from utils.dependencies import bcrypt, tabulate
++ from utils.textfiles_database import load_data, save_value
++ 
++-controlllers_data_filepath = "data/controllers.txt"
+++controllers_data_filepath = "data/controllers.txt"
++ 
++ 
++ def controller_manager():
++     numberOfFailures = 0
++     try:
++-        values = load_data(controlllers_data_filepath)
+++        user_hash_map = load_data(controllers_data_filepath)
++     except Exception:
++-        values = {}
+++        user_hash_map = {}
++     while numberOfFailures < 3:
++         user_input = select_from_list(
++             "Controller System: Please choose an option", ["Login", "Register"]
++         )
++ 
++         if user_input.lower() == "register":
++-            if len(values) >= 4:
+++            if len(user_hash_map) >= 4:
++                 clear_screen()
++-                print("[Error]: There has already been 4 users registered")
+++                print(
+++                    "[Error]: There has already been 4 users registered, please login as admin and remove a user before registering!"
+++                )
++                 continue
++             registration_details = {}
++-            username = input("what is the username >>")
++-            if username in values:
++-                print("This username already exists")
+++            username = input("Please enter your username: ")
+++            if username in user_hash_map:
+++                clear_screen()
+++                print(f'[Error]: Username "{username}" already exists')
+++                continue
+++            password = getpass("Please enter your password: ")
+++            clear_screen()
+++            password_confirmation = getpass("Please re-enter your password: ")
+++            if password != password_confirmation:
+++                print("[Error]: password confirmation and password doesn't match!")
++                 continue
++-            password = input("what is the password? >>")
++-            registration_details[username] = password
++-            values.update(registration_details)
++-            save_value(values, controlllers_data_filepath)
+++            registration_details[username] = hash(password)
+++            user_hash_map.update(registration_details)
+++            save_value(user_hash_map, controllers_data_filepath)
+++            clear_screen()
+++            print(f'[Controller Manager]: Registered user "{username}" successfully!')
++         elif user_input.lower() == "login":
++-            username_input = input("Username >>")
++-            if username_input not in values:
+++            username_input = input("Username: ")
+++            if username_input not in user_hash_map:
++                 clear_screen()
++                 print("User doesn't exists")
++                 numberOfFailures += 1
++                 continue
++ 
++-            password_input = input("Password >>")
++-            if not values[username_input] == password_input:
++-                print("Wrong password")
+++            password_input = getpass("Password: ")
+++            match = check_password(password_input, user_hash_map[username_input])
+++            if not match:
+++                clear_screen()
+++                print(f"[Error]: Invalid password for {username_input}!")
++                 numberOfFailures += 1
++                 continue
++             clear_screen()
++@@ -47,3 +62,65 @@ def controller_manager():
++     else:
++         clear_screen()
++         return None
+++
+++
+++def retrieve_controllers() -> dict:
+++    controller_data = load_data(controllers_data_filepath)
+++    return controller_data
+++
+++
+++def remove_controller() -> str:
+++    controller_data = retrieve_controllers()
+++    options = list(controller_data.keys())
+++    options.remove("admin")
+++    options.append("Cancel")
+++
+++    controller_to_remove = select_from_list(
+++        "Which controller do you want to remove?", options
+++    )
+++
+++    if controller_to_remove == "Cancel":
+++        return None
+++
+++    controller_data.pop(controller_to_remove)
+++    save_value(controller_data, controllers_data_filepath)
+++    return controller_to_remove
+++
+++
+++def print_removed_controllers():
+++    removed_controller = remove_controller()
+++    # check if removed_conrroller is none
+++    clear_screen()
+++    if removed_controller is None:
+++        print("[Controller Manager]: Action cancelled successfully")
+++    else:
+++        print(f"[Controller Manager] {removed_controller} has been removed")
+++
+++
+++def print_controllers():
+++    controllers = retrieve_controllers()
+++    output_table = []
+++    clear_screen()
+++    print("[Controller manager]: List of controllers:")
+++    for username in controllers:
+++        output_table.append([username])
+++
+++    print(
+++        tabulate(
+++            output_table,
+++            headers=["Username"],
+++            showindex=range(1, len(controllers) + 1),
+++            tablefmt="simple_grid",
+++        )
+++    )
+++
+++
+++def hash(password):
+++    # Hashes the password with a random salt
+++    hashed = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
+++    return hashed
+++
+++
+++def check_password(password, hashed_password):
+++    match = bcrypt.checkpw(password.encode("utf-8"), hashed_password)
+++    return match
++diff --git a/managers/distribution_manager.py b/managers/distribution_manager.py
++index 14a274c..df4ca60 100644
++--- a/managers/distribution_manager.py
+++++ b/managers/distribution_manager.py
++@@ -1,5 +1,7 @@
++ import time
++ 
+++from tabulate import tabulate
+++
++ from managers.hospital_manager import retrieve_hospital
++ from managers.inventory_manager import retrieve_item
++ from utils.cli import clear_screen, select_from_list
++@@ -86,12 +88,23 @@ def print_distributions(item_code: str):
++     print(
++         f'[Distribution Manager]: Distribution data for {item["item_name"]} ({item["item_code"]})\n'
++     )
+++    output_table = []
++     for hospital_code in summed_distribution_data:
++         hospital = retrieve_hospital(hospital_code)
++-
++-        print(
++-            f"{summed_distribution_data[hospital_code]} boxes was distributed to {hospital['hospital_name']} ({hospital['hospital_code']})"
+++        output_table.append(
+++            [
+++                hospital_code,
+++                hospital["hospital_name"],
+++                summed_distribution_data[hospital_code],
+++            ]
+++        )
+++    print(
+++        tabulate(
+++            output_table,
+++            headers=["Hospital Code", "Hospital Name", "Quantity Distributed (boxes)"],
+++            tablefmt="mixed_grid",
++         )
+++    )
++ 
++     print(">>\n")
++     options = ["Yes", "No"]
++@@ -101,11 +114,31 @@ def print_distributions(item_code: str):
++     )
++ 
++     if option == options[0]:
+++        transactions_table = []
++         for entry in distribution_data:
++             timestamp = entry["date"]
++             readable_date_time = timestamp_tostring(timestamp)
++             hospital = retrieve_hospital(entry["hospital_code"])
+++            transactions_table.append(
+++                [
+++                    readable_date_time,
+++                    entry["hospital_code"],
+++                    entry["quantity"],
+++                    entry["controller"],
+++                ]
+++            )
++ 
++-            print(
++-                f'[{readable_date_time}] {entry["quantity"]} was distributed to {hospital["hospital_name"]} ({entry["hospital_code"]}) [Controller: {entry["controller"]}]'
+++            # print(
+++            #     f'[{readable_date_time}] {entry["quantity"]} was distributed to {hospital["hospital_name"]} ({entry["hospital_code"]}) [Controller: {entry["controller"]}]'
+++            # )
+++        print(
+++            tabulate(
+++                transactions_table,
+++                headers=[
+++                    "Date & Time",
+++                    "Hospital Code",
+++                    "Quantity Distributed (boxes)",
+++                    "Controller",
+++                ],
++             )
+++        )
++diff --git a/managers/supplier_manager.py b/managers/supplier_manager.py
++index c6192f1..8a90f3d 100644
++--- a/managers/supplier_manager.py
+++++ b/managers/supplier_manager.py
++@@ -33,7 +33,7 @@ def get_supplier_info(supplier_code):
++         return None
++ 
++ 
++-def retreive_supplier_data() -> list:
+++def retrieve_supplier_data() -> list:
++     try:
++         data = load_data(supplier_data_filepath)
++     except Exception:
++@@ -42,7 +42,7 @@ def retreive_supplier_data() -> list:
++ 
++ 
++ def update_supplier_data(supplier_code, data):
++-    supplier_data = retreive_supplier_data()
+++    supplier_data = retrieve_supplier_data()
++     for i, entry in enumerate(supplier_data):
++         if entry["supplier_code"] == supplier_code:
++             supplier_data[i] = data
++diff --git a/requirements.txt b/requirements.txt
++index 0254b41..3777c34 100644
++--- a/requirements.txt
+++++ b/requirements.txt
++@@ -1,3 +1,4 @@
++ bcrypt==4.1.3
++ inquirer==3.2.5
+++tabulate==0.9.0
++ 
++diff --git a/todo.md b/todo.md
++deleted file mode 100644
++index 5da1f54..0000000
++--- a/todo.md
+++++ /dev/null
++@@ -1,8 +0,0 @@
++-# things to talk about
++-research about json data structure how its better to store data with it
++-
++-
++-# additional features
++-password encryption with sha256 when registration and saving the data
++-when input password hide the input with a *
++-change to table displaying data
++diff --git a/utils/cli.py b/utils/cli.py
++index edf445d..bd88e77 100644
++--- a/utils/cli.py
+++++ b/utils/cli.py
++@@ -1,6 +1,6 @@
++ import os
++ 
++-from utils.inquirer import inquirer
+++from utils.dependencies import inquirer
++ 
++ 
++ def select_from_list(question: str, options: list) -> str:
++diff --git a/utils/inquirer.py b/utils/dependencies.py
++similarity index 83%
++rename from utils/inquirer.py
++rename to utils/dependencies.py
++index 4e3f67b..d3cbfb9 100644
++--- a/utils/inquirer.py
+++++ b/utils/dependencies.py
++@@ -11,5 +11,6 @@ def import_or_install(module_name):
++         return __import__(module_name)
++ 
++ 
++-# Automatically install and import 'inquirer'
++ inquirer = import_or_install("inquirer")
+++bcrypt = import_or_install("bcrypt")
+++tabulate = import_or_install("tabulate")
++diff --git a/utils/tables.py b/utils/tables.py
++new file mode 100644
++index 0000000..11cf423
++--- /dev/null
+++++ b/utils/tables.py
++@@ -0,0 +1,46 @@
+++from tabulate import tabulate
+++
+++
+++def create_table_extend(data_input, locations):
+++    result = [[] for _ in range(len(locations))]
+++
+++    for data in data_input:
+++        for location_idx, location in enumerate(locations):
+++            current_data = data
+++            keys = location.split(".")
+++            for key in keys:
+++                if isinstance(current_data, list):
+++                    new_data = []
+++                    for entry in current_data:
+++                        new_value = entry.get(key)
+++                        if isinstance(new_value, list):
+++                            new_data.extend(new_value)
+++                        else:
+++                            new_data.append(new_value)
+++                    current_data = new_data
+++                else:
+++                    current_data = current_data.get(key)
+++
+++            if isinstance(current_data, list):
+++                result[location_idx].extend(current_data)
+++            else:
+++                result[location_idx].append(current_data)
+++
+++    return ["\n".join(map(str, sublist)) for sublist in result]
+++
+++
+++def tabularize(list_of_unknown_type, headers, numbering=True, tablefmt="mixed_grid"):
+++    table = []
+++    table.append(headers)
+++    for unknown_type in list_of_unknown_type:
+++        if type(unknown_type) == dict:
+++            table.append(list(unknown_type.values()))
+++        if type(unknown_type) == list:
+++            table.append(unknown_type)
+++
+++    return tabulate(
+++        table,
+++        headers="firstrow",
+++        tablefmt=tablefmt,
+++        showindex=range(1, len(list_of_unknown_type) + 1) if numbering else False,
+++    )
+diff --git a/handlers/action_handler.py b/handlers/action_handler.py
+index 447234a..a5707af 100644
+--- a/handlers/action_handler.py
++++ b/handlers/action_handler.py
+@@ -1,21 +1,27 @@
++from handlers.admin_handler import admin_handler
++from handlers.details_handler import details_handler
+ from handlers.exit_handler import exit_handler
+ from handlers.item_inventory_tracker import item_inventory_tracker_handler
+ from handlers.report_handler import report_handler
+ from handlers.search_handler import search_handler
+-from handlers.update_details import update_details_handler
+-from handlers.update_inventory import update_inventory_handler
++from handlers.update_inventory import (distribute_inventory_handler,
++                                       receive_supplies_handler)
+ from utils.cli import select_from_list
+ 
+ 
+ def action_handler(controller):
++
+     handlers = {
+-        "Distribute / Receive Supply": update_inventory_handler,
+-        "Update Details": update_details_handler,
++        "Distribute Inventory": distribute_inventory_handler,
++        "Receive Supplies": receive_supplies_handler,
++        "Details (View / Update)": details_handler,
+         "Item Inventory Tracking": item_inventory_tracker_handler,
+-        "Search Item": search_handler,
++        "Search": search_handler,
+         "Generate Report": report_handler,
+         "Exit": exit_handler,
+     }
++    if controller == "admin":
++        handlers["Admin Actions"] = admin_handler
+     action = select_from_list("What action do you want to perform?", handlers.keys())
+ 
+     handlers[action](controller)
+diff --git a/handlers/admin_handler.py b/handlers/admin_handler.py
+new file mode 100644
+index 0000000..64f173e
+--- /dev/null
++++ b/handlers/admin_handler.py
+@@ -0,0 +1,19 @@
++from handlers.continue_handler import continue_handler
++from managers.controller_manager import (print_controllers,
++                                         print_removed_controllers)
++from utils.cli import select_from_list
++
++controllers_file_path = "data/controllers.txt"
++
++
++def admin_handler(controller):
++    choices = ["View all controllers", "Remove a controller"]
++    choice = select_from_list("What action would you like to take", choices)
++
++    if choice == choices[0]:
++        print_controllers()
++
++    elif choice == choices[1]:
++        print_removed_controllers()
++
++    continue_handler(controller)
+diff --git a/handlers/details_handler.py b/handlers/details_handler.py
+new file mode 100644
+index 0000000..fe438df
+--- /dev/null
++++ b/handlers/details_handler.py
+@@ -0,0 +1,254 @@
++from tabulate import tabulate
++
++from handlers.continue_handler import continue_handler
++from managers.hospital_manager import (retrieve_hospital,
++                                       retrieve_hospital_codes,
++                                       update_hospital_data)
++from managers.supplier_manager import (get_supplier_info,
++                                       retrieve_supplier_codes,
++                                       update_supplier_data)
++from utils.cli import clear_screen, select_from_list
++from utils.text_manipulation import (convert_to_snake_case,
++                                     get_between_parantheses)
++from utils.textfiles_database import load_data
++
++
++def details_handler(controller):
++    options = ["Update Details", "View Details"]
++    option = select_from_list("What action do you wish to perform?", options)
++    if option == options[0]:
++        update_details_handler()
++    else:
++        view_details_handler()
++    continue_handler(controller)
++
++
++def update_details_handler():
++    category_choices = ["Supplier", "Hospitals"]
++    category_selection = select_from_list(
++        "Which category are you looking to update?", category_choices
++    )
++
++    if category_selection == category_choices[0]:
++        supplier_codes = retrieve_supplier_codes()
++        hospital_choices = list(
++            map(
++                lambda x: get_supplier_info(x)["supplier_company_name"] + f" ({x})",
++                supplier_codes,
++            )
++        )
++
++        unparsed_hospital_selection = select_from_list(
++            "Which supplier do you want to edit?", hospital_choices
++        )
++        hospital_selection = get_between_parantheses(unparsed_hospital_selection)[0]
++        hospital = get_supplier_info(hospital_selection)
++
++        attribute_choices = [
++            "Supplier Person Name",
++            "Supplier Company Name",
++            "Supplier Company Address",
++        ]
++        unparsed_attribute_selection = select_from_list(
++            "Which attribute do you want to edit?", attribute_choices
++        )
++        attribute_selection = convert_to_snake_case(unparsed_attribute_selection)
++        value_input = input(
++            f"What do you want to change the {unparsed_attribute_selection} to >> "
++        )
++
++        hospital[attribute_selection] = value_input
++        update_supplier_data(hospital_selection, hospital)
++        clear_screen()
++
++        print(
++            f"[Supplier Handler]: Updated {hospital_selection}'s {unparsed_attribute_selection} to {value_input}"
++        )
++    elif category_selection == category_choices[1]:
++        hospital_codes = retrieve_hospital_codes()
++        hospital_choices = list(
++            map(
++                lambda x: retrieve_hospital(x)["hospital_name"] + f" ({x})",
++                hospital_codes,
++            )
++        )
++
++        unparsed_hospital_selection = select_from_list(
++            "Which supplier do you want to edit?", hospital_choices
++        )
++        hospital_selection = get_between_parantheses(unparsed_hospital_selection)[0]
++        hospital = retrieve_hospital(hospital_selection)
++
++        attribute_choices = [
++            "Hospital Name",
++            "Hospital Address",
++        ]
++        unparsed_attribute_selection = select_from_list(
++            "Which attribute do you want to edit?", attribute_choices
++        )
++        attribute_selection = convert_to_snake_case(unparsed_attribute_selection)
++        value_input = input(
++            f"What do you want to change the {unparsed_attribute_selection} to >> "
++        )
++
++        hospital[attribute_selection] = value_input
++        update_hospital_data(hospital_selection, hospital)
++        clear_screen()
++
++        print(
++            f"[Hospital Handler]: Updated {hospital_selection}'s {unparsed_attribute_selection} to {value_input}"
++        )
++
++
++def update_details_handler():
++    category_choices = ["Supplier", "Hospitals"]
++    category_selection = select_from_list(
++        "Which category are you looking to update?", category_choices
++    )
++
++    if category_selection == category_choices[0]:
++        supplier_codes = retrieve_supplier_codes()
++        hospital_choices = list(
++            map(
++                lambda x: get_supplier_info(x)["supplier_company_name"] + f" ({x})",
++                supplier_codes,
++            )
++        )
++
++        unparsed_hospital_selection = select_from_list(
++            "Which supplier do you want to edit?", hospital_choices
++        )
++        hospital_selection = get_between_parantheses(unparsed_hospital_selection)[0]
++        hospital = get_supplier_info(hospital_selection)
++
++        attribute_choices = [
++            "Supplier Person Name",
++            "Supplier Company Name",
++            "Supplier Company Address",
++        ]
++        unparsed_attribute_selection = select_from_list(
++            "Which attribute do you want to edit?", attribute_choices
++        )
++        attribute_selection = convert_to_snake_case(unparsed_attribute_selection)
++        value_input = input(
++            f"What do you want to change the {unparsed_attribute_selection} to >> "
++        )
++
++        hospital[attribute_selection] = value_input
++        update_supplier_data(hospital_selection, hospital)
++        clear_screen()
++
++        print(
++            f"[Supplier Handler]: Updated {hospital_selection}'s {unparsed_attribute_selection} to {value_input}"
++        )
++    elif category_selection == category_choices[1]:
++        hospital_codes = retrieve_hospital_codes()
++        hospital_choices = list(
++            map(
++                lambda x: retrieve_hospital(x)["hospital_name"] + f" ({x})",
++                hospital_codes,
++            )
++        )
++
++        unparsed_hospital_selection = select_from_list(
++            "Which supplier do you want to edit?", hospital_choices
++        )
++        hospital_selection = get_between_parantheses(unparsed_hospital_selection)[0]
++        hospital = retrieve_hospital(hospital_selection)
++
++        attribute_choices = [
++            "Hospital Name",
++            "Hospital Address",
++        ]
++        unparsed_attribute_selection = select_from_list(
++            "Which attribute do you want to edit?", attribute_choices
++        )
++        attribute_selection = convert_to_snake_case(unparsed_attribute_selection)
++        value_input = input(
++            f"What do you want to change the {unparsed_attribute_selection} to >> "
++        )
++
++        hospital[attribute_selection] = value_input
++        update_hospital_data(hospital_selection, hospital)
++        clear_screen()
++
++        print(
++            f"[Hospital Handler]: Updated {hospital_selection}'s {unparsed_attribute_selection} to {value_input}"
++        )
++
++
++def view_details_handler():
++    options = ["Items", "Hospitals", "Suppliers"]
++    selection = select_from_list("Which category do you want to view?", options)
++    heading = f"[Details Handler]: Details on {selection}"
++    headers = []
++    filepath = "data/"
++
++    if selection == options[0]:
++        headers.extend(["Item Code", "Item Name", "Supplier Code", "Quantity"])
++        filepath += "ppe.txt"
++    elif selection == options[1]:
++        headers.extend(["Hospital Code", "Hospital Name", "Hospital Address"])
++        filepath += "hospitals.txt"
++    elif selection == options[2]:
++        headers.extend(
++            [
++                "Supplier Code",
++                "Supplier Person Name",
++                "Supplier Company Name",
++                "Supplier Address",
++            ]
++        )
++        filepath += "suppliers.txt"
++
++    raw_data = load_data(filepath)
++    data = list(entry.values() for entry in raw_data)
++    clear_screen()
++    print(heading)
++    print(
++        tabulate(
++            data,
++            headers=headers,
++            tablefmt="simple_grid",
++            showindex=range(1, len(data) + 1),
++        )
++    )
++
++
++def view_details_handler():
++    options = ["Items", "Hospitals", "Suppliers"]
++    selection = select_from_list("Which category do you want to view?", options)
++    clear_screen()
++    heading = f"[Details Handler]: Details on {selection}"
++    headers = []
++    filepath = "data/"
++
++    if selection == options[0]:
++        headers.extend(["Item Code", "Item Name", "Supplier Code", "Quantity"])
++        filepath += "ppe.txt"
++    elif selection == options[1]:
++        headers.extend(["Hospital Code", "Hospital Name", "Hospital Address"])
++        filepath += "hospitals.txt"
++    elif selection == options[2]:
++        headers.extend(
++            [
++                "Supplier Code",
++                "Supplier Person Name",
++                "Supplier Company Name",
++                "Supplier Address",
++            ]
++        )
++        filepath += "suppliers.txt"
++
++    raw_data = load_data(filepath)
++    data = list(entry.values() for entry in raw_data)
++    clear_screen()
++    print(heading)
++    print(
++        tabulate(
++            data,
++            headers=headers,
++            tablefmt="simple_grid",
++            showindex=range(1, len(data) + 1),
++        )
++    )
+diff --git a/handlers/item_inventory_tracker.py b/handlers/item_inventory_tracker.py
+index 755b44d..e1fbcba 100644
+--- a/handlers/item_inventory_tracker.py
++++ b/handlers/item_inventory_tracker.py
+@@ -1,10 +1,17 @@
++from tabulate import tabulate
++
+ from managers.inventory_manager import retrieve_inventory
++from managers.supplier_manager import get_supplier_info
+ from utils.cli import clear_screen, select_from_list
+ 
+ 
+ def item_inventory_tracker_handler(controller):
+     clear_screen()
+-    action_selection = ["Quantity of All Items", "Items that has lesser than 25 boxes"]
++    action_selection = [
++        "Quantity of All Items",
++        "Items that has lesser than 25 boxes",
++        "Custom item quantity range",
++    ]
+     action = select_from_list(
+         "[Inventory Manager]: Which action do you wish to perform?", action_selection
+     )
+@@ -14,10 +21,8 @@ def item_inventory_tracker_handler(controller):
+     if action == action_selection[0]:
+         inventory.sort(key=lambda x: x["quantity"])
+         print("[Inventory Manager]: List of items with quantity in ascending order: \n")
+-        for entry in inventory:
+-            print(
+-                f"{entry['item_name']} ({entry['item_code']}) - {entry['quantity']} boxes"
+-            )
++        # item code, item name, item quantity, supplier
++        display_items(inventory)
+     elif action == action_selection[1]:
+         res = filter(lambda x: x["quantity"] < 25, inventory)
+         filtered_list = list(res)
+@@ -27,11 +32,56 @@ def item_inventory_tracker_handler(controller):
+             print(
+                 "[Inventory Manager]: List of items with quantity is lesser than 25 boxes: \n"
+             )
+-            for entry in filtered_list:
+-                print(
+-                    f"{entry['item_name']} ({entry['item_code']}) - {entry['quantity']} boxes"
+-                )
++            display_items(filtered_list)
++    else:
++        display_items_between_range(inventory)
+ 
+     from handlers.continue_handler import continue_handler
+ 
+     continue_handler(controller)
++
++
++def get_valid_input(prompt):
++    while True:
++        value = input(prompt)
++        if value.isdigit():
++            return int(value)
++        else:
++            print("That is not a valid number")
++
++
++def display_items_between_range(inventory):
++    starting_range = get_valid_input("What is the starting range: ")
++    ending_range = get_valid_input("What is the ending range: ")
++    filtered_list = list(
++        filter(lambda x: starting_range <= x["quantity"] <= ending_range, inventory)
++    )
++    if len(filtered_list) == 0:
++        print(
++            f"[Inventory Manager]: There are no items that fit in the range of ({starting_range} - {ending_range})"
++        )
++    else:
++        display_items(filtered_list)
++
++
++def display_items(data):
++    output_table = []
++    for entry in data:
++        supplier = get_supplier_info(entry["supplier_code"])
++        output_table.extend(
++            [
++                [
++                    entry["item_code"],
++                    entry["item_name"],
++                    str(entry["quantity"]),
++                    f"{supplier['supplier_company_name']} ({supplier['supplier_code']})",
++                ]
++            ]
++        )
++    print(
++        tabulate(
++            output_table,
++            headers=["Item Code", "Item Name", "Quantity in boxes", "Supplier"],
++            tablefmt="simple_grid",
++        )
++    )
+diff --git a/handlers/remove_user_handler.py b/handlers/remove_user_handler.py
+new file mode 100644
+index 0000000..81801a2
+--- /dev/null
++++ b/handlers/remove_user_handler.py
+@@ -0,0 +1,28 @@
++from handlers.continue_handler import continue_handler
++from utils.cli import clear_screen, select_from_list
++from utils.textfiles_database import load_data, save_value
++
++controllers_data_filepath = "data/controllers.txt"
++
++
++def remove_user_handler(controller):
++    controllers = load_data(controllers_data_filepath)
++    exclude_admin = list(controllers.keys())
++    exclude_admin.remove("admin")
++    if len(exclude_admin) == 0:
++        print("There are no controllers to remove.")
++    else:
++        controller_to_remove = select_from_list(
++            "Which controller do you want to remove", exclude_admin
++        )
++        confirmation = select_from_list(
++            f'Are you sure you want to remove controller "{controller_to_remove}"',
++            ["Yes", "No"],
++        )
++        if confirmation == "Yes":
++            controllers.pop(controller_to_remove)
++            save_value(controllers, controllers_data_filepath)
++            clear_screen()
++            print(f'Removed controller "{controller_to_remove}" successfully!')
++
++    continue_handler(controller)
+diff --git a/handlers/report_handler.py b/handlers/report_handler.py
+index 8920a78..88726f9 100644
+--- a/handlers/report_handler.py
++++ b/handlers/report_handler.py
+@@ -1,3 +1,5 @@
++from tabulate import tabulate
++
+ from handlers.continue_handler import continue_handler
+ from managers.distribution_manager import retrieve_distribution_data
+ from managers.hospital_manager import retrieve_hospital
+@@ -6,6 +8,7 @@ from managers.supplier_manager import (get_supplier_info,
+                                        retreive_supply_transactions_data)
+ from utils.cli import clear_screen, select_from_list
+ from utils.misc import timestamp_to_monthyear, timestamp_tostring
++from utils.tables import create_table_extend, tabularize
+ 
+ 
+ def report_handler(controller):
+@@ -118,45 +121,81 @@ def distributions_and_supplies_month():
+     )
+     clear_screen()
+ 
+-    print(f"[Report Handler]: Distributions for {month_year_selection}\n")
++    print(
++        f"[Report Handler]: Distributions & Supplies Report for {month_year_selection}\n"
++    )
+     map_value = date_data_map[month_year_selection]
++    if "distribution_transactions" in map_value:
++        distribution_data = map_value["distribution_transactions"]
++        # Hospital, total distributions, item(s)
++        distribution_table = []
++        total_distributions = 0
+ 
+-    # Print distributions
+-    print("(Distributions)")
+-    if "distribution_transactions" not in map_value:
+-        print("   No distributions!")
+-    else:
+-        distribution_transactions = map_value["distribution_transactions"]
+-        for index, hospital_code in enumerate(distribution_transactions):
++        # Loop over every single hospital in data
++        for entry in distribution_data:
++            hospital_code = entry
+             hospital = retrieve_hospital(hospital_code)
+-            print(
+-                f"{index + 1}. {hospital['hospital_name']}\n   Address: {hospital['hospital_address']}"
+-            )
+-            print(
+-                f'   Total distributions: {distribution_transactions[hospital_code]["total_quantity"]} boxes'
+-            )
+-            for item_code in distribution_transactions[hospital_code]["items"]:
++            entry_value = distribution_data[hospital_code]
++            total_distributions = entry_value["total_quantity"]
++            items = entry_value["items"]
++            hospital_table = [
++                f"{hospital['hospital_name']} ({hospital_code})",
++                f"{total_distributions} boxes",
++            ]
++            items_distributed = []
++            for item_code in items:
+                 item = retrieve_item(item_code)
+-                print(
+-                    f'     - {item["item_name"]} ({item_code}): {distribution_transactions[hospital_code]["items"][item_code]} boxes'
++                items_distributed.append(
++                    f"{item['item_name']} ({item_code}) - {items[item_code]} boxes"
+                 )
+-            print("\n")
+-
+-    print("(Supply Received)")
+-    if "supply_transactions" not in map_value:
+-        print("   No supply received!")
+-    else:
+-        supply_transactions = map_value["supply_transactions"]
++                total_distributions += items[item_code]
++            hospital_table.insert(1, "\n".join(items_distributed))
++            distribution_table.append(hospital_table)
++        print(f"Total distributions: {total_distributions} boxes")
+         print(
+-            f"Total supply boxes received: {map_value['supply_transactions']['total_quantity']} boxes"
++            tabulate(
++                distribution_table,
++                headers=["Hospital", "Item(s) distributed", "Total distributed"],
++                tablefmt="simple_grid",
++                showindex=range(1, len(distribution_table) + 1),
++            )
+         )
+-        for index, item_code in enumerate(supply_transactions["items"]):
++
++    else:
++        print("No distribution transactions found.")
++
++    print("\n")
++
++    # Print supply transactions
++    if "supply_transactions" in map_value:
++        supply_data = map_value["supply_transactions"]
++        total_quantity = supply_data["total_quantity"]
++        items = supply_data["items"]
++        print(f"Supply received: {total_quantity} boxes")
++        # Item Code, Item Name, Item Quantity, Supplied by
++        supply_table = []
++        for item_code in items:
++            column = []
+             item = retrieve_item(item_code)
+-            print(
+-                f'   {index + 1}. {item["item_name"]} {supply_transactions["items"][item_code]} boxes'
+-            )
+             supplier = get_supplier_info(item["supplier_code"])
+-            print(f'      Supplier: {supplier["supplier_company_name"]}')
++            column.append(item_code)
++            column.append(item["item_name"])
++            column.append(f"{ items[item_code] } boxes")
++            column.append(
++                f"{supplier['supplier_company_name']} ({supplier['supplier_code']})"
++            )
++            supply_table.append(column)
++        print(
++            tabulate(
++                supply_table,
++                headers=["Item Code", "Item Name", "Quantity Received", "Supplied by"],
++                tablefmt="simple_grid",
++                showindex=range(1, len(supply_table) + 1),
++            )
++        )
++
++    else:
++        print("No supply transactions found.")
+ 
+ 
+ def suppliers_and_equipments():
+@@ -175,22 +214,34 @@ def suppliers_and_equipments():
+ 
+     clear_screen()
+     print("[Report Handler]: Supplier along with their equipments supplied\n")
++    output_table = []
+     for supplier_code in supplier_items_map:
+         supplier = get_supplier_info(supplier_code)
+-        print(
+-            f'[Supplier Code: {supplier["supplier_code"]}] {supplier["supplier_company_name"]} ({supplier["supplier_person_name"]})'
++        to_append = [supplier_code, supplier["supplier_company_name"]]
++        item_list = supplier_items_map[supplier_code]
++        to_append.extend(
++            create_table_extend(item_list, ["item_code", "item_name", "quantity"])
+         )
+-
+-        for index, item in enumerate(supplier_items_map[supplier_code]):
+-            print(f"\t{index + 1}) {item['item_name']} (Code: {item['item_code']})")
+-        print("\n")
++        output_table.append(to_append)
++    print(
++        tabularize(
++            output_table,
++            headers=[
++                "Supplier Code",
++                "Supplier Name",
++                "Item Code",
++                "Item Name",
++                "Current Quantity (Boxes)",
++            ],
++        )
++    )
+ 
+ 
+ def hospitals_and_distributions():
+     # Get all distributions
+     distribution_data = retrieve_distribution_data()
+     view_transaction_report_input = select_from_list(
+-        "Do you want to view every single transaction log aswell?",
++        "Would you wish to see every single transaction recorded?",
+         ["Yes", "No (Show the summarised report)"],
+     )
+     view_transaction_report = view_transaction_report_input == "Yes"
+@@ -207,20 +258,22 @@ def hospitals_and_distributions():
+     hospital_distribution_map = {}
+     for entry in distribution_data:
+         # {'item_code': 'HC', 'hospital_code': 'H1', 'quantity': 4, 'date': 1718633537.693726, 'controller': 'heh'}
+-        key = entry["hospital_code"]
++        hospital_code = entry["hospital_code"]
++        item = retrieve_item(entry["item_code"])
+         map_value = {
+-            "item": retrieve_item(entry["item_code"]),
++            "item": item,
++            "supplier_data": get_supplier_info(item["supplier_code"]),
+             "quantity": entry["quantity"],
+             "date": timestamp_tostring(entry["date"]),
+             "controller": entry["controller"],
+         }
+-        if key in hospital_distribution_map:
+-            hospital_distribution_map[key]["total_quantity_distributed"] += entry[
+-                "quantity"
+-            ]
+-            hospital_distribution_map[key]["transactions"].append(map_value)
++        if hospital_code in hospital_distribution_map:
++            hospital_distribution_map[hospital_code][
++                "total_quantity_distributed"
++            ] += entry["quantity"]
++            hospital_distribution_map[hospital_code]["transactions"].append(map_value)
+         else:
+-            hospital_distribution_map[key] = {
++            hospital_distribution_map[hospital_code] = {
+                 "total_quantity_distributed": entry["quantity"],
+                 "transactions": [map_value],
+             }
+@@ -229,19 +282,49 @@ def hospitals_and_distributions():
+     print(
+         "[Report Handler]: Hospital along with the items that was distributed to them\n"
+     )
+-    for key in hospital_distribution_map:
+-        hospital = retrieve_hospital(key)
+-        print(
+-            f'[Hospital Code: {hospital["hospital_code"]}] {hospital["hospital_name"]} @ ({hospital["hospital_address"]})'
+-        )
+-        print(
+-            f"Total quantity of boxes supplied: {hospital_distribution_map[key]['total_quantity_distributed']}"
+-        )
++    for idx, hospital_code in enumerate(hospital_distribution_map):
++        hospital = retrieve_hospital(hospital_code)
++        hospital_output = [
++            f"{idx + 1}. {hospital['hospital_name']}",
++            f"   Total distributions: {hospital_distribution_map[hospital_code]['total_quantity_distributed']} boxes",
++            f"   Hospital Code: { hospital['hospital_code'] }",
++            f'   Hospital Address:{hospital["hospital_address"] }',
++            "",
++        ]
++        print("\n".join(hospital_output))
+ 
+         if view_transaction_report:
+             print("Transactions:")
+-            for transaction in hospital_distribution_map[key]["transactions"]:
+-                print(
+-                    f"\t[{transaction['date']}] ({transaction['quantity']} boxes) {transaction['item']['item_name']} (Code: {transaction['item']['item_code']}) - (Controller: {transaction['controller']})"
++            transaction_table = []
++            transactions = hospital_distribution_map[hospital_code]["transactions"]
++            transaction_table.append(
++                create_table_extend(
++                    transactions,
++                    [
++                        "date",
++                        "item.item_code",
++                        "item.item_name",
++                        "supplier_data.supplier_code",
++                        "supplier_data.supplier_company_name",
++                        "quantity",
++                        "controller",
++                    ],
+                 )
++            )
++            print(
++                tabularize(
++                    transaction_table,
++                    [
++                        "Date & Time",
++                        "Item Code",
++                        "Item Name",
++                        "Supplier Code",
++                        "Company Name",
++                        "Quantity Distributed",
++                        "Controller",
++                    ],
++                    numbering=False,
++                )
++            )
++
+         print("\n")
+diff --git a/handlers/search_handler.py b/handlers/search_handler.py
+index 8500356..541b301 100644
+--- a/handlers/search_handler.py
++++ b/handlers/search_handler.py
+@@ -1,10 +1,82 @@
+-from utils.misc import prompt_for_items
+-from managers.distribution_manager import print_distributions
++from tabulate import tabulate
++
+ from handlers.continue_handler import continue_handler
++from managers.distribution_manager import print_distributions
++from managers.hospital_manager import retrieve_hospital_data
++from managers.supplier_manager import retrieve_supplier_data
++from utils.cli import clear_screen, select_from_list
++from utils.misc import prompt_for_items
++from utils.text_manipulation import get_between_parantheses
+ 
+ 
+ def search_handler(controller):
++    options = ["Item", "Hospital", "Supplier"]
++    selection = select_from_list("Which category do you want to search?", options)
++    if selection == options[0]:
++        search_item()
++    elif selection == options[1]:
++        search_hospital()
++    elif selection == options[2]:
++        search_supplier()
++
++    continue_handler(controller)
++
++
++def search_item():
+     item = prompt_for_items("Which item are you searching for?")
+     print_distributions(item["item_code"])
+ 
+-    continue_handler(controller)
++
++def search_hospital():
++    hospital_data = retrieve_hospital_data()
++    hospital_options = list(
++        f"{hospital['hospital_name']} ({hospital['hospital_code']})"
++        for hospital in hospital_data
++    )
++    hospital_selection = select_from_list(
++        "Which hospital do you want to search?", hospital_options
++    )
++    hospital_code = get_between_parantheses(hospital_selection)[0]
++    hospital = list(
++        filter(lambda x: x["hospital_code"] == hospital_code, hospital_data)
++    )[0]
++    hospital_values = [hospital.values()]
++    clear_screen()
++    print(f"[Search Handler]: Hospital details for {hospital_selection}")
++    print(
++        tabulate(
++            hospital_values,
++            headers=["Hospital Code", "Hospital Name", "Hospital Address"],
++            tablefmt="simple_grid",
++        )
++    )
++
++
++def search_supplier():
++    supplier_data = retrieve_supplier_data()
++    supplier_options = list(
++        f"{supplier['supplier_company_name']} ({supplier['supplier_code']})"
++        for supplier in supplier_data
++    )
++    supplier_selection = select_from_list(
++        "Which supplier do you want to search?", supplier_options
++    )
++    supplier_code = get_between_parantheses(supplier_selection)[0]
++    supplier = list(
++        filter(lambda x: x["supplier_code"] == supplier_code, supplier_data)
++    )[0]
++    supplier_values = [supplier.values()]
++    clear_screen()
++    print(f"[Search Handler]: Supplier details for {supplier_selection}")
++    print(
++        tabulate(
++            supplier_values,
++            headers=[
++                "Supplier Code",
++                "Supplier Person Name",
++                "Supplier Company Name",
++                "Supplier Address",
++            ],
++            tablefmt="simple_grid",
++        )
++    )
+diff --git a/handlers/update_details.py b/handlers/update_details.py
+deleted file mode 100644
+index 78acbc3..0000000
+--- a/handlers/update_details.py
++++ /dev/null
+@@ -1,92 +0,0 @@
+-from utils.cli import select_from_list, clear_screen
+-from utils.text_manipulation import convert_to_snake_case, get_between_parantheses
+-from managers.supplier_manager import (
+-    retrieve_supplier_codes,
+-    get_supplier_info,
+-    update_supplier_data,
+-)
+-from managers.hospital_manager import (
+-    retrieve_hospital_codes,
+-    update_hospital_data,
+-    retrieve_hospital,
+-)
+-from handlers.continue_handler import continue_handler
+-
+-
+-def update_details_handler(controller):
+-    category_choices = ["Supplier", "Hospitals"]
+-    category_selection = select_from_list(
+-        "Which category are you looking to update?", category_choices
+-    )
+-
+-    if category_selection == category_choices[0]:
+-        supplier_codes = retrieve_supplier_codes()
+-        hospital_choices = list(
+-            map(
+-                lambda x: get_supplier_info(x)["supplier_company_name"] + f" ({x})",
+-                supplier_codes,
+-            )
+-        )
+-
+-        unparsed_hospital_selection = select_from_list(
+-            "Which supplier do you want to edit?", hospital_choices
+-        )
+-        hospital_selection = get_between_parantheses(unparsed_hospital_selection)[0]
+-        hospital = get_supplier_info(hospital_selection)
+-
+-        attribute_choices = [
+-            "Supplier Person Name",
+-            "Supplier Company Name",
+-            "Supplier Company Address",
+-        ]
+-        unparsed_attribute_selection = select_from_list(
+-            "Which attribute do you want to edit?", attribute_choices
+-        )
+-        attribute_selection = convert_to_snake_case(unparsed_attribute_selection)
+-        value_input = input(
+-            f"What do you want to change the {unparsed_attribute_selection} to >> "
+-        )
+-
+-        hospital[attribute_selection] = value_input
+-        update_supplier_data(hospital_selection, hospital)
+-        clear_screen()
+-
+-        print(
+-            f"[Supplier Handler]: Updated {hospital_selection}'s {unparsed_attribute_selection} to {value_input}"
+-        )
+-    elif category_selection == category_choices[1]:
+-        hospital_codes = retrieve_hospital_codes()
+-        hospital_choices = list(
+-            map(
+-                lambda x: retrieve_hospital(x)["hospital_name"] + f" ({x})",
+-                hospital_codes,
+-            )
+-        )
+-
+-        unparsed_hospital_selection = select_from_list(
+-            "Which supplier do you want to edit?", hospital_choices
+-        )
+-        hospital_selection = get_between_parantheses(unparsed_hospital_selection)[0]
+-        hospital = retrieve_hospital(hospital_selection)
+-
+-        attribute_choices = [
+-            "Hospital Name",
+-            "Hospital Address",
+-        ]
+-        unparsed_attribute_selection = select_from_list(
+-            "Which attribute do you want to edit?", attribute_choices
+-        )
+-        attribute_selection = convert_to_snake_case(unparsed_attribute_selection)
+-        value_input = input(
+-            f"What do you want to change the {unparsed_attribute_selection} to >> "
+-        )
+-
+-        hospital[attribute_selection] = value_input
+-        update_hospital_data(hospital_selection, hospital)
+-        clear_screen()
+-
+-        print(
+-            f"[Hospital Handler]: Updated {hospital_selection}'s {unparsed_attribute_selection} to {value_input}"
+-        )
+-
+-    continue_handler(controller)
+diff --git a/handlers/update_inventory.py b/handlers/update_inventory.py
+index d37de50..53ecbdc 100644
+--- a/handlers/update_inventory.py
++++ b/handlers/update_inventory.py
+@@ -1,3 +1,4 @@
++from handlers.continue_handler import continue_handler
+ from managers.distribution_manager import distribute_inventory
+ from managers.hospital_manager import retrieve_hospital, retrieve_hospital_data
+ from managers.supplier_manager import receive_supplies
+@@ -6,65 +7,57 @@ from utils.misc import prompt_for_items
+ from utils.text_manipulation import get_between_parantheses
+ 
+ 
+-# Distribute / Receive Supplies
+-def update_inventory_handler(controller):
++def distribute_inventory_handler(controller):
+     clear_screen()
+-    action = select_from_list(
+-        "What do you want to perform?", ["Distribute Items", "Receive Supply"]
+-    )
+     item = prompt_for_items("Which item are you performing it on?")
+-
+-    if action == "Distribute Items":
+-        quantity: int = 0
+-        while True:
+-            quantity = input("How much boxes are being distributed (numbers only) >> ")
+-            if not quantity.isdigit():
+-                print("That is not a valid number")
+-                continue
+-            quantity = int(quantity)
+-            # Check if its distributing  that the currently avaiable
+-            if quantity > item["quantity"]:
+-                print(f"We only have {item['quantity']} boxes of {item['item_name']}")
+-                continue
+-            break
+-
+-        hospitals_data = retrieve_hospital_data()
+-        hospital_selection = []
+-        for entry in hospitals_data:
+-            hospital_selection.append(
+-                f"{entry['hospital_name']} ({entry['hospital_code']})"
+-            )
+-
+-        unparsed_hospital_code = select_from_list(
+-            "Which hospital do you want to distribute to?", hospital_selection
+-        )
+-        hospital_code = get_between_parantheses(unparsed_hospital_code)[0]
+-        hospital = retrieve_hospital(hospital_code)
+-
+-        res = distribute_inventory(
+-            item["item_code"], hospital_code, quantity, controller
++    quantity: int = 0
++    while True:
++        quantity = input("How much boxes are being distributed (numbers only) >> ")
++        if not quantity.isdigit():
++            print("That is not a valid number")
++            continue
++        quantity = int(quantity)
++        # Check if its distributing  that the currently avaiable
++        if quantity > item["quantity"]:
++            print(f"We only have {item['quantity']} boxes of {item['item_name']}")
++            continue
++        break
++
++    hospitals_data = retrieve_hospital_data()
++    hospital_selection = []
++    for entry in hospitals_data:
++        hospital_selection.append(
++            f"{entry['hospital_name']} ({entry['hospital_code']})"
+         )
+-        if res:
+-            clear_screen()
+-            print(
+-                f"[Inventory Manager]: Distributed {quantity} boxes of {item['item_name']} to {hospital['hospital_name']}"
+-            )
+ 
+-    elif action == "Receive Supply":
+-        quantity: int = 0
+-        while True:
+-            quantity = input("How much boxes are being supplied (numbers only) >> ")
+-            if quantity.isdigit():
+-                quantity = int(quantity)
+-                break
+-            else:
+-                print("That is not a valid number")
++    unparsed_hospital_code = select_from_list(
++        "Which hospital do you want to distribute to?", hospital_selection
++    )
++    hospital_code = get_between_parantheses(unparsed_hospital_code)[0]
++    hospital = retrieve_hospital(hospital_code)
+ 
+-        receive_supplies(item["item_code"], quantity, controller)
++    res = distribute_inventory(item["item_code"], hospital_code, quantity, controller)
++    if res:
+         clear_screen()
+         print(
+-            f"[Inventory Manager]: Received {quantity} boxes of {item['item_name']}, now we have {item['quantity'] + quantity} boxes!"
++            f"[Inventory Manager]: Distributed {quantity} boxes of {item['item_name']} to {hospital['hospital_name']}"
+         )
+-    from handlers.continue_handler import continue_handler
++    continue_handler(controller)
++
+ 
++def receive_supplies_handler(controller):
++    clear_screen()
++    item = prompt_for_items("Which item are you performing it on?")
++    quantity: int = 0
++    while True:
++        quantity = input("How much boxes are being received (numbers only) >> ")
++        if not quantity.isdigit():
++            print("That is not a valid number")
++            continue
++        quantity = int(quantity)
++        break
++    res = receive_supplies(item["item_code"], quantity, controller)
++    if res:
++        clear_screen()
++        print(f"[Inventory Manager]: Received {quantity} boxes of {item['item_name']}")
+     continue_handler(controller)
+diff --git a/main.py b/main.py
+index d10a5ef..65f8eed 100644
+--- a/main.py
++++ b/main.py
+@@ -1,6 +1,9 @@
++from tabulate import tabulate
++
+ from handlers.action_handler import action_handler
+ from managers.controller_manager import controller_manager
+ from utils.cli import clear_screen
++from utils.dependencies import import_or_install
+ 
+ 
+ def controller_login() -> str | None:
+@@ -15,6 +18,7 @@ def controller_login() -> str | None:
+ 
+ # Login System
+ def main():
++    import_or_install("tabulate")
+     clear_screen()
+     controller = controller_login()
+     if controller is None:
+diff --git a/managers/controller_manager.py b/managers/controller_manager.py
+index ebf0d67..216707f 100644
+--- a/managers/controller_manager.py
++++ b/managers/controller_manager.py
+@@ -1,45 +1,62 @@
++from getpass import getpass
++
++from tabulate import tabulate
++
+ from utils.cli import clear_screen, select_from_list
++from utils.dependencies import bcrypt
+ from utils.textfiles_database import load_data, save_value
+ 
+-controlllers_data_filepath = "data/controllers.txt"
++controllers_data_filepath = "data/controllers.txt"
+ 
+ 
+ def controller_manager():
+     numberOfFailures = 0
+     try:
+-        values = load_data(controlllers_data_filepath)
++        user_hash_map = load_data(controllers_data_filepath)
+     except Exception:
+-        values = {}
++        user_hash_map = {}
+     while numberOfFailures < 3:
+         user_input = select_from_list(
+             "Controller System: Please choose an option", ["Login", "Register"]
+         )
+ 
+         if user_input.lower() == "register":
+-            if len(values) >= 4:
++            if len(user_hash_map) >= 4:
+                 clear_screen()
+-                print("[Error]: There has already been 4 users registered")
++                print(
++                    "[Error]: There has already been 4 users registered, please login as admin and remove a user before registering!"
++                )
+                 continue
+             registration_details = {}
+-            username = input("what is the username >>")
+-            if username in values:
+-                print("This username already exists")
++            username = input("Please enter your username: ")
++            if username in user_hash_map:
++                clear_screen()
++                print(f'[Error]: Username "{username}" already exists')
+                 continue
+-            password = input("what is the password? >>")
+-            registration_details[username] = password
+-            values.update(registration_details)
+-            save_value(values, controlllers_data_filepath)
++            password = getpass("Please enter your password: ")
++            clear_screen()
++            password_confirmation = getpass("Please re-enter your password: ")
++            if password != password_confirmation:
++                print("[Error]: password confirmation and password doesn't match!")
++                continue
++            registration_details[username] = hash(password)
++            user_hash_map.update(registration_details)
++            save_value(user_hash_map, controllers_data_filepath)
++            clear_screen()
++            print(f'[Controller Manager]: Registered user "{username}" successfully!')
+         elif user_input.lower() == "login":
+-            username_input = input("Username >>")
+-            if username_input not in values:
++            username_input = input("Username: ")
++            if username_input not in user_hash_map:
+                 clear_screen()
+                 print("User doesn't exists")
+                 numberOfFailures += 1
+                 continue
+ 
+-            password_input = input("Password >>")
+-            if not values[username_input] == password_input:
+-                print("Wrong password")
++            password_input = getpass("Password: ")
++            match = check_password(password_input, user_hash_map[username_input])
++            if not match:
++                clear_screen()
++                print(f"[Error]: Invalid password for {username_input}!")
+                 numberOfFailures += 1
+                 continue
+             clear_screen()
+@@ -47,3 +64,65 @@ def controller_manager():
+     else:
+         clear_screen()
+         return None
++
++
++def retrieve_controllers() -> dict:
++    controller_data = load_data(controllers_data_filepath)
++    return controller_data
++
++
++def remove_controller() -> str:
++    controller_data = retrieve_controllers()
++    options = list(controller_data.keys())
++    options.remove("admin")
++    options.append("Cancel")
++
++    controller_to_remove = select_from_list(
++        "Which controller do you want to remove?", options
++    )
++
++    if controller_to_remove == "Cancel":
++        return None
++
++    controller_data.pop(controller_to_remove)
++    save_value(controller_data, controllers_data_filepath)
++    return controller_to_remove
++
++
++def print_removed_controllers():
++    removed_controller = remove_controller()
++    # check if removed_conrroller is none
++    clear_screen()
++    if removed_controller is None:
++        print("[Controller Manager]: Action cancelled successfully")
++    else:
++        print(f"[Controller Manager] {removed_controller} has been removed")
++
++
++def print_controllers():
++    controllers = retrieve_controllers()
++    output_table = []
++    clear_screen()
++    print("[Controller manager]: List of controllers:")
++    for username in controllers:
++        output_table.append([username])
++
++    print(
++        tabulate(
++            output_table,
++            headers=["Username"],
++            showindex=range(1, len(controllers) + 1),
++            tablefmt="simple_grid",
++        )
++    )
++
++
++def hash(password):
++    # Hashes the password with a random salt
++    hashed = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
++    return hashed
++
++
++def check_password(password, hashed_password):
++    match = bcrypt.checkpw(password.encode("utf-8"), hashed_password)
++    return match
+diff --git a/managers/distribution_manager.py b/managers/distribution_manager.py
+index 14a274c..3bf0f44 100644
+--- a/managers/distribution_manager.py
++++ b/managers/distribution_manager.py
+@@ -1,5 +1,7 @@
+ import time
+ 
++from tabulate import tabulate
++
+ from managers.hospital_manager import retrieve_hospital
+ from managers.inventory_manager import retrieve_item
+ from utils.cli import clear_screen, select_from_list
+@@ -86,12 +88,23 @@ def print_distributions(item_code: str):
+     print(
+         f'[Distribution Manager]: Distribution data for {item["item_name"]} ({item["item_code"]})\n'
+     )
++    output_table = []
+     for hospital_code in summed_distribution_data:
+         hospital = retrieve_hospital(hospital_code)
+-
+-        print(
+-            f"{summed_distribution_data[hospital_code]} boxes was distributed to {hospital['hospital_name']} ({hospital['hospital_code']})"
++        output_table.append(
++            [
++                hospital_code,
++                hospital["hospital_name"],
++                summed_distribution_data[hospital_code],
++            ]
++        )
++    print(
++        tabulate(
++            output_table,
++            headers=["Hospital Code", "Hospital Name", "Quantity Distributed (boxes)"],
++            tablefmt="simple_grid",
+         )
++    )
+ 
+     print(">>\n")
+     options = ["Yes", "No"]
+@@ -101,11 +114,31 @@ def print_distributions(item_code: str):
+     )
+ 
+     if option == options[0]:
++        transactions_table = []
+         for entry in distribution_data:
+             timestamp = entry["date"]
+             readable_date_time = timestamp_tostring(timestamp)
+             hospital = retrieve_hospital(entry["hospital_code"])
++            transactions_table.append(
++                [
++                    readable_date_time,
++                    entry["hospital_code"],
++                    entry["quantity"],
++                    entry["controller"],
++                ]
++            )
+ 
+-            print(
+-                f'[{readable_date_time}] {entry["quantity"]} was distributed to {hospital["hospital_name"]} ({entry["hospital_code"]}) [Controller: {entry["controller"]}]'
++            # print(
++            #     f'[{readable_date_time}] {entry["quantity"]} was distributed to {hospital["hospital_name"]} ({entry["hospital_code"]}) [Controller: {entry["controller"]}]'
++            # )
++        print(
++            tabulate(
++                transactions_table,
++                headers=[
++                    "Date & Time",
++                    "Hospital Code",
++                    "Quantity Distributed (boxes)",
++                    "Controller",
++                ],
+             )
++        )
+diff --git a/managers/supplier_manager.py b/managers/supplier_manager.py
+index c6192f1..8a90f3d 100644
+--- a/managers/supplier_manager.py
++++ b/managers/supplier_manager.py
+@@ -33,7 +33,7 @@ def get_supplier_info(supplier_code):
+         return None
+ 
+ 
+-def retreive_supplier_data() -> list:
++def retrieve_supplier_data() -> list:
+     try:
+         data = load_data(supplier_data_filepath)
+     except Exception:
+@@ -42,7 +42,7 @@ def retreive_supplier_data() -> list:
+ 
+ 
+ def update_supplier_data(supplier_code, data):
+-    supplier_data = retreive_supplier_data()
++    supplier_data = retrieve_supplier_data()
+     for i, entry in enumerate(supplier_data):
+         if entry["supplier_code"] == supplier_code:
+             supplier_data[i] = data
+diff --git a/requirements.txt b/requirements.txt
+index 0254b41..3777c34 100644
+--- a/requirements.txt
++++ b/requirements.txt
+@@ -1,3 +1,4 @@
+ bcrypt==4.1.3
+ inquirer==3.2.5
++tabulate==0.9.0
+ 
+diff --git a/todo.md b/todo.md
+deleted file mode 100644
+index 5da1f54..0000000
+--- a/todo.md
++++ /dev/null
+@@ -1,8 +0,0 @@
+-# things to talk about
+-research about json data structure how its better to store data with it
+-
+-
+-# additional features
+-password encryption with sha256 when registration and saving the data
+-when input password hide the input with a *
+-change to table displaying data
+diff --git a/utils/cli.py b/utils/cli.py
+index edf445d..bd88e77 100644
+--- a/utils/cli.py
++++ b/utils/cli.py
+@@ -1,6 +1,6 @@
+ import os
+ 
+-from utils.inquirer import inquirer
++from utils.dependencies import inquirer
+ 
+ 
+ def select_from_list(question: str, options: list) -> str:
+diff --git a/utils/inquirer.py b/utils/dependencies.py
+similarity index 83%
+rename from utils/inquirer.py
+rename to utils/dependencies.py
+index 4e3f67b..d3cbfb9 100644
+--- a/utils/inquirer.py
++++ b/utils/dependencies.py
+@@ -11,5 +11,6 @@ def import_or_install(module_name):
+         return __import__(module_name)
+ 
+ 
+-# Automatically install and import 'inquirer'
+ inquirer = import_or_install("inquirer")
++bcrypt = import_or_install("bcrypt")
++tabulate = import_or_install("tabulate")
+diff --git a/utils/tables.py b/utils/tables.py
+new file mode 100644
+index 0000000..75aa776
+--- /dev/null
++++ b/utils/tables.py
+@@ -0,0 +1,46 @@
++from tabulate import tabulate
++
++
++def create_table_extend(data_input, locations):
++    result = [[] for _ in range(len(locations))]
++
++    for data in data_input:
++        for location_idx, location in enumerate(locations):
++            current_data = data
++            keys = location.split(".")
++            for key in keys:
++                if isinstance(current_data, list):
++                    new_data = []
++                    for entry in current_data:
++                        new_value = entry.get(key)
++                        if isinstance(new_value, list):
++                            new_data.extend(new_value)
++                        else:
++                            new_data.append(new_value)
++                    current_data = new_data
++                else:
++                    current_data = current_data.get(key)
++
++            if isinstance(current_data, list):
++                result[location_idx].extend(current_data)
++            else:
++                result[location_idx].append(current_data)
++
++    return ["\n".join(map(str, sublist)) for sublist in result]
++
++
++def tabularize(list_of_unknown_type, headers, numbering=True, tablefmt="simple_grid"):
++    table = []
++    table.append(headers)
++    for unknown_type in list_of_unknown_type:
++        if type(unknown_type) == dict:
++            table.append(list(unknown_type.values()))
++        if type(unknown_type) == list:
++            table.append(unknown_type)
++
++    return tabulate(
++        table,
++        headers="firstrow",
++        tablefmt=tablefmt,
++        showindex=range(1, len(list_of_unknown_type) + 1) if numbering else False,
++    )
