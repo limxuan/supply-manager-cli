@@ -2,14 +2,18 @@ from handlers.continue_handler import continue_handler
 from managers.distribution_manager import distribute_inventory
 from managers.hospital_manager import retrieve_hospital, retrieve_hospital_data
 from managers.supplier_manager import receive_supplies
-from utils.cli import clear_screen, select_from_list
+from utils.cli import clear_screen, go_back, select_from_list
 from utils.misc import prompt_for_items
 from utils.text_manipulation import get_between_parantheses
 
 
 def distribute_inventory_handler(controller):
+
     clear_screen()
+
     item = prompt_for_items("Which item are you performing it on?")
+    if item == "Back":
+        return go_back(controller)
     quantity: int = 0
     while True:
         quantity = input("How much boxes are being distributed (numbers only) >> ")
@@ -33,6 +37,8 @@ def distribute_inventory_handler(controller):
     unparsed_hospital_code = select_from_list(
         "Which hospital do you want to distribute to?", hospital_selection
     )
+    if unparsed_hospital_code == "Back":
+        return go_back(controller)
     hospital_code = get_between_parantheses(unparsed_hospital_code)[0]
     hospital = retrieve_hospital(hospital_code)
 
@@ -48,6 +54,9 @@ def distribute_inventory_handler(controller):
 def receive_supplies_handler(controller):
     clear_screen()
     item = prompt_for_items("Which item are you performing it on?")
+    if item == "Back":
+        return go_back(controller)
+
     quantity: int = 0
     while True:
         quantity = input("How much boxes are being received (numbers only) >> ")

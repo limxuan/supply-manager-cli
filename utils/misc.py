@@ -14,6 +14,8 @@ def prompt_for_items(question) -> dict:
         )
 
     unparsed_item_code = select_from_list(question, item_selection)
+    if unparsed_item_code == "Back":
+        return "Back"
     item_code = get_between_parantheses(unparsed_item_code)[0]
     item = retrieve_item(item_code)
     return item

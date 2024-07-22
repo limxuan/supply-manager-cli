@@ -1,7 +1,7 @@
 from handlers.continue_handler import continue_handler
 from managers.controller_manager import (print_controllers,
                                          print_removed_controllers)
-from utils.cli import select_from_list
+from utils.cli import go_back, select_from_list
 
 controllers_file_path = "data/controllers.txt"
 
@@ -15,5 +15,8 @@ def admin_handler(controller):
 
     elif choice == choices[1]:
         print_removed_controllers()
+
+    elif choice == "Back":
+        return go_back(controller)
 
     continue_handler(controller)

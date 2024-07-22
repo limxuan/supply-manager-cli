@@ -6,7 +6,7 @@ from managers.hospital_manager import retrieve_hospital
 from managers.inventory_manager import retrieve_inventory, retrieve_item
 from managers.supplier_manager import (get_supplier_info,
                                        retreive_supply_transactions_data)
-from utils.cli import clear_screen, select_from_list
+from utils.cli import clear_screen, go_back, select_from_list
 from utils.misc import timestamp_to_monthyear, timestamp_tostring
 from utils.tables import create_table_extend, tabularize
 
@@ -23,12 +23,14 @@ def report_handler(controller):
     elif selection == options[1]:
         hospitals_and_distributions()
     elif selection == options[2]:
-        distributions_and_supplies_month()
+        distributions_and_supplies_month(controller)
+    elif selection == "Back":
+        return go_back()
 
     continue_handler(controller)
 
 
-def distributions_and_supplies_month():
+def distributions_and_supplies_month(controller):
     date_data_map = {}
 
     # Get all availabe distributions
@@ -119,6 +121,8 @@ def distributions_and_supplies_month():
     month_year_selection = select_from_list(
         "Which month do you want a report on?", valid_month_years
     )
+    if month_year_selection == "Back":
+        return go_back(controller)
     clear_screen()
 
     print(
@@ -243,6 +247,7 @@ def hospitals_and_distributions():
     view_transaction_report_input = select_from_list(
         "Would you wish to see every single transaction recorded?",
         ["Yes", "No (Show the summarised report)"],
+        False,
     )
     view_transaction_report = view_transaction_report_input == "Yes"
 
@@ -282,6 +287,7 @@ def hospitals_and_distributions():
     print(
         "[Report Handler]: Hospital along with the items that was distributed to them\n"
     )
+    # TODO:  tabulate this
     for idx, hospital_code in enumerate(hospital_distribution_map):
         hospital = retrieve_hospital(hospital_code)
         hospital_output = [

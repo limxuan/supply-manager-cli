@@ -17,7 +17,7 @@ def controller_manager():
         user_hash_map = {}
     while numberOfFailures < 3:
         user_input = select_from_list(
-            "Controller System: Please choose an option", ["Login", "Register"]
+            "Controller System: Please choose an option", ["Login", "Register"], False
         )
 
         if user_input.lower() == "register":
@@ -75,13 +75,13 @@ def remove_controller() -> str:
     controller_data = retrieve_controllers()
     options = list(controller_data.keys())
     options.remove("admin")
-    options.append("Cancel")
+    options.append("[Cancel]")
 
     controller_to_remove = select_from_list(
-        "Which controller do you want to remove?", options
+        "Which controller do you want to remove?", options, False
     )
 
-    if controller_to_remove == "Cancel":
+    if controller_to_remove == "[Cancel]":
         return None
 
     controller_data.pop(controller_to_remove)

@@ -22,6 +22,8 @@ def action_handler(controller):
     }
     if controller == "admin":
         handlers["Admin Actions"] = admin_handler
-    action = select_from_list("What action do you want to perform?", handlers.keys())
+    action = select_from_list(
+        "What action do you want to perform?", handlers.keys(), False
+    )
 
     handlers[action](controller)

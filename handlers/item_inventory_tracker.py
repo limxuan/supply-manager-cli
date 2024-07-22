@@ -2,7 +2,7 @@ from tabulate import tabulate
 
 from managers.inventory_manager import retrieve_inventory
 from managers.supplier_manager import get_supplier_info
-from utils.cli import clear_screen, select_from_list
+from utils.cli import clear_screen, go_back, select_from_list
 
 
 def item_inventory_tracker_handler(controller):
@@ -15,6 +15,8 @@ def item_inventory_tracker_handler(controller):
     action = select_from_list(
         "[Inventory Manager]: Which action do you wish to perform?", action_selection
     )
+    if action == "Back":
+        return go_back(controller)
     inventory = retrieve_inventory()
     clear_screen()
 

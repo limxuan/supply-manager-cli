@@ -4,7 +4,9 @@ research about json data structure how its better to store data with it
 password hashing
 displaying data with tables
 
+
 # additional features
+- [x] Back Button for all selections
 - [x] password 
   - [x] hashing with bcrypt
   - [x] hide password input with getpass
