@@ -72,20 +72,20 @@ def update_details_handler(controller):
         )
     elif category_selection == category_choices[1]:
         hospital_codes = retrieve_hospital_codes()
-        supplier_choices = list(
+        hospital_choices = list(
             map(
                 lambda x: retrieve_hospital(x)["hospital_name"] + f" ({x})",
                 hospital_codes,
             )
         )
 
-        unparsed_supplier_selection = select_from_list(
-            "Which supplier do you want to edit?", supplier_choices
+        unparsed_hospital_selection = select_from_list(
+            "Which supplier do you want to edit?", hospital_choices
         )
-        if unparsed_supplier_selection == "Back":
+        if unparsed_hospital_selection == "Back":
             return go_back(controller)
-        supplier_selection = get_between_parantheses(unparsed_supplier_selection)[0]
-        supplier = retrieve_hospital(supplier_selection)
+        hospital_selection = get_between_parantheses(unparsed_hospital_selection)[0]
+        hospital = retrieve_hospital(hospital_selection)
 
         attribute_choices = [
             "Hospital Name",
@@ -101,12 +101,12 @@ def update_details_handler(controller):
             f"What do you want to change the {unparsed_attribute_selection} to >> "
         )
 
-        supplier[attribute_selection] = value_input
-        update_hospital_data(supplier_selection, supplier)
+        hospital[attribute_selection] = value_input
+        update_hospital_data(hospital_selection, hospital)
         clear_screen()
 
         print(
-            f"[Hospital Handler]: Updated {supplier_selection}'s {unparsed_attribute_selection} to {value_input}"
+            f"[Hospital Handler]: Updated {hospital_selection}'s {unparsed_attribute_selection} to {value_input}"
         )
     elif category_selection == "Back":
         return go_back(controller)
