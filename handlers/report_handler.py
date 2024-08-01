@@ -4,10 +4,8 @@ from handlers.continue_handler import continue_handler
 from managers.distribution_manager import retrieve_distribution_data
 from managers.hospital_manager import retrieve_hospital
 from managers.inventory_manager import retrieve_inventory, retrieve_item
-from managers.supplier_manager import (
-    get_supplier_info,
-    retreive_supply_transactions_data,
-)
+from managers.supplier_manager import (get_supplier_info,
+                                       retrieve_supply_transactions_data)
 from utils.cli import clear_screen, go_back, select_from_list
 from utils.misc import timestamp_to_monthyear, timestamp_tostring
 from utils.tables import create_table_extend, tabularize
@@ -86,7 +84,7 @@ def distributions_and_supplies_month(controller):
         ] += quantity
 
     # Get Supplies Transactions
-    supplies_data = retreive_supply_transactions_data()
+    supplies_data = retrieve_supply_transactions_data()
 
     for entry in supplies_data:
         if month_year not in date_data_map:
@@ -136,17 +134,19 @@ def distributions_and_supplies_month(controller):
         # Hospital, total distributions, item(s)
         distribution_table = []
         total_distributions = 0
+        total_hospital_distributions = 0
 
         # Loop over every single hospital in data
         for entry in distribution_data:
             hospital_code = entry
             hospital = retrieve_hospital(hospital_code)
             entry_value = distribution_data[hospital_code]
-            total_distributions = entry_value["total_quantity"]
+            total_hospital_distributions = entry_value["total_quantity"]
+            total_distributions += total_hospital_distributions
             items = entry_value["items"]
             hospital_table = [
                 f"{hospital['hospital_name']} ({hospital_code})",
-                f"{total_distributions} boxes",
+                f"{total_hospital_distributions} boxes",
             ]
             items_distributed = []
             for item_code in items:
@@ -154,7 +154,6 @@ def distributions_and_supplies_month(controller):
                 items_distributed.append(
                     f"{item['item_name']} ({item_code}) - {items[item_code]} boxes"
                 )
-                total_distributions += items[item_code]
             hospital_table.insert(1, "\n".join(items_distributed))
             distribution_table.append(hospital_table)
         print(f"Total distributions: {total_distributions} boxes")

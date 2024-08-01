@@ -69,7 +69,7 @@ def receive_supplies(item_code, quantity, controller):
     add_item_quantity(item_code, quantity)
 
 
-def retreive_supply_transactions_data() -> list:
+def retrieve_supply_transactions_data() -> list:
     try:
         data = load_data(supply_transactions_data_filepath)
     except Exception:
