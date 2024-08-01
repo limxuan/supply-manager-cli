@@ -87,6 +87,7 @@ def distributions_and_supplies_month(controller):
     supplies_data = retrieve_supply_transactions_data()
 
     for entry in supplies_data:
+        month_year = timestamp_to_monthyear(entry["date"])
         if month_year not in date_data_map:
             date_data_map[month_year] = {
                 "supply_transactions": {"total_quantity": 0, "items": {}},
@@ -117,6 +118,10 @@ def distributions_and_supplies_month(controller):
             "quantity"
         ]
 
+    if not date_data_map:
+        clear_screen()
+        print("There hasn't been any distribution or supply transactions")
+        return
     valid_month_years = date_data_map.keys()
     month_year_selection = select_from_list(
         "Which month do you want a report on?", valid_month_years
@@ -134,7 +139,6 @@ def distributions_and_supplies_month(controller):
         # Hospital, total distributions, item(s)
         distribution_table = []
         total_distributions = 0
-        total_hospital_distributions = 0
 
         # Loop over every single hospital in data
         for entry in distribution_data:
@@ -255,11 +259,12 @@ def hospitals_and_distributions():
     # Loop over each distribution to find unique hospitals
     # Structure
     """
-    {
-        hospital_code: string
-        total_quantity_distributed: number
-        transactions: [{item, quantity, date, controller}]
-    }
+    [
+        {hospital_code: {
+            total_quantity_distributed: number
+            transactions: [{item, quantity, date, controller}]
+        }}, ...
+    ]
     """
     hospital_distribution_map = {}
     for entry in distribution_data:
@@ -288,6 +293,9 @@ def hospitals_and_distributions():
     print(
         "[Report Handler]: Hospital along with the items that was distributed to them\n"
     )
+    if not hospital_distribution_map:
+        print("No distributions found.")
+        return
     for idx, hospital_code in enumerate(hospital_distribution_map):
         hospital = retrieve_hospital(hospital_code)
         hospital_output = [
