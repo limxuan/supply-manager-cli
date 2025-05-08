@@ -1,3 +1,55 @@
+# 🏥 Supply Manager CLI
+
+![demo](https://vyn0b0z4rp.ufs.sh/f/q9IVYNuY13wnPfz8rtqRHGYxrKjP5EwysOktImfliJMXaS8A)
+
+A command-line inventory management system acting as a **middleware** between suppliers and hospital distributors. This tool helps track, distribute, and report inventory activities effectively with secure and structured data storage.
+## 🚀 Features
+
+- 🔐 Password encryption for secure access
+- 📦 Receive supplies from suppliers
+- 🚚 Distribute inventory to hospitals
+- 🧾 Full transaction logs for audit and tracking
+- 🔍 View, search, or update details:
+  - Items
+  - Hospitals
+  - Suppliers
+- 📊 Generate Reports:
+  - List of suppliers and the items they supply
+  - List of hospitals and the items distributed to them
+  - Monthly summary of all supply and distribution transactions
+- 💾 Text-based JSON storage (no external database required)
+
+## ⚙️ Installation & Running
+
+1. Install the required dependencies:
+
+```bash
+pip3 install -r requirements.txt
+```
+
+2. Run the application:
+
+```bash
+python3 main.py
+```
+
+## 🛠️ Technologies Used
+
+- **Python** – Core programming language used to build the CLI
+- **Inquirer** – For creating interactive terminal menus
+- **JSON** – Used as the format for storing structured data in text files
+
+
+## 📁 Data Storage
+
+All data (inventory, suppliers, hospitals, and transactions) is stored in **JSON-formatted text files** locally. This makes the system lightweight and easy to maintain without the need for external databases.
+## 👨‍⚕️ Use Case
+
+Designed for use in hospital networks or logistics departments to ensure:
+- Transparency in medical supply distribution
+- Efficient stock and transaction tracking
+- Clear reporting for accountability and planning
+
 # things to talk about
 
 research about json data structure how its better to store data with it
